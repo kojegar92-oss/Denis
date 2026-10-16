@@ -209,6 +209,12 @@ html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 
 .pk-w.pk-on.pk-new{stroke:#A79FF5;stroke-width:3;stroke-dasharray:8 5}
 .pk-el.pk-pnew .pk-coil{stroke:#A79FF5;filter:drop-shadow(0 0 4px rgba(167,159,245,.85))}
+
+.pk-stub{stroke:#6d7581;stroke-width:1.4;stroke-dasharray:3 3}
+.pk-sep{stroke:#2e343d;stroke-width:1}
+.pk-wind{stroke-width:1.8}
+.pk-wind.pk-won{stroke:#2BB386;stroke-width:2.4}
+.pk-wind.pk-wnew{stroke:#A79FF5;stroke-width:2.6}
 </style>
 </head>
 <body>
@@ -514,7 +520,9 @@ window.PK_INFO={
 'КУ17':'контактор управления: признак того, что дизель запущен; собирает цепь возбуждения возбудителя',
 'РДМ':'реле давления масла',
 'БУК':'контакт блокировки тормозов усл. № 367',
-'Л35':'лампа «Дизель 2-го тепловоза»'
+'Л35':'лампа «Дизель 2-го тепловоза»',
+'Г':'тяговый генератор: при пуске работает в режиме электродвигателя и проворачивает коленчатый вал',
+'РБ':'рубильник аккумуляторной батареи'
 };
 (function(){
 function p(d){return '<span class="pl">'+d+'</span>'}
@@ -554,8 +562,11 @@ window.PK_STEPS=[
 {sim:10,focus:['РВ5'],tag:'3. Проворот и подача топлива',title:p('РВ5')+' получило питание',
  text:'Контакт '+p('РУ5')+' 885–165 замкнулся: катушка реле времени '+p('РВ5')+' получила питание. Если давление масла не появится, через 16±2 с '+p('РВ5')+' завершит пуск по времени.',
  chain:'885 → '+p('РУ5')+' → 165 → 1728 → '+p('РВ5')+' → минус'},
+{sim:11,focus:['Г'],tag:'3. Проворот и подача топлива',title:'Тяговый генератор получил питание',
+ text:p('Д1')+' и '+p('Д2')+' включились. Их силовые контакты подключили тяговый генератор к аккумуляторной батарее: ток идёт через якорь, добавочные полюса и пусковую обмотку. Генератор в режиме электродвигателя проворачивает коленчатый вал.',
+ chain:'БА «+» → 71 → '+p('РБ')+' → 101 → '+p('Д1')+' → 102 → 12×2 → Я1 '+p('Г')+' Я2 → пусковая обмотка → 103 → '+p('Д2')+' → 138 → '+p('РБ')+' → 105 → БА «−»'},
 {sim:11,focus:['БМ'],tag:'3. Проворот и подача топлива',title:p('БМ')+' получил питание',
- text:p('Д1')+' и '+p('Д2')+' включились: тяговый генератор подключён к аккумуляторной батарее и в режиме электродвигателя проворачивает коленчатый вал. Блок-контакт '+p('Д1')+' 577–133 замкнулся: катушка блок-магнита '+p('БМ')+' получила питание.',
+ text:'Блок-контакт '+p('Д1')+' 577–133 замкнулся: катушка блок-магнита '+p('БМ')+' получила питание.',
  chain:'1563 → 577 → '+p('Д1')+' → 133 → 5/6 → 144 → 145 → 12Д → '+p('БМ')+' → минус'},
 {sim:13,focus:['РУ4'],tag:'4. Дизель запустился',title:p('РУ4')+' получило питание',
  text:p('БМ')+' включился, подаётся топливо, дизель запустился. Давление масла достигло нормы, контакт '+p('РДМ')+' замкнулся: катушка '+p('РУ4')+' (реле завершения пуска) получила питание.',
@@ -599,7 +610,7 @@ root.innerHTML=
 
 var sv=document.getElementById('pk_sv');
 var Y=function(i){return 40+i*44};
-var BUS=1230, CX=1100, W=1320, H=Y(29)+46;
+var BUS=1230, CX=1100, W=1320, H=Y(34.2)+46;
 sv.setAttribute('viewBox','0 0 '+W+' '+H);
 
 var LW=[], SEG=[], EL=[], NODES=[], PLUS=[], MINUSPT=[];
@@ -696,6 +707,7 @@ function row(y,T,col){
   }
 }
 function vw(x,y1,y2,lab,side,col){wire([[x,y1],[x,y2]],col);vl(x,y1,y2,lab,side)}
+function stub(x,y,dx,dy,lab){mk('line',{x1:x,y1:y,x2:x+dx,y2:y+dy,'class':'pk-stub'},gE);tx(x+dx+(dx?4:0),y+dy+(dy<0?-5:13),lab,'pk-tp',dx?'start':'middle',gT)}
 function cap(x,y,s,an){tx(x,y,s,'pk-cap',an||'middle',gT)}
 function plus(x,y){PLUS.push([x,y]);tx(x-4,y+4,'+','pk-tn','end',gT)}
 /* тумблер: пары контактов от шины x=116 до x=170 */
@@ -715,7 +727,7 @@ function tumbler(name,capt,ys,pins,keys){
 
 /* ================= СХЕМА (по плакату ТЭМ18Д) ================= */
 mk('rect',{x:0,y:0,width:W,height:H,'class':'pk-bg'},gW);
-wire([[BUS,Y(5)],[BUS,Y(29)]],'k'); MINUSPT.push([BUS,Y(5)]);
+wire([[BUS,Y(5)],[BUS,Y(32.4)]],'k'); MINUSPT.push([BUS,Y(5)]);
 tx(BUS+6,Y(5)-8,'4/6, 4/7','pk-tp','start',gT); tx(BUS+8,Y(15),'минус','pk-cap','start',gT);
 
 plus(20,Y(0)); wire([[20,Y(0)],[285,Y(0)],[285,Y(1)]]); wl(20,285,Y(0),'804');
@@ -831,6 +843,35 @@ jd(380,Y(28));
   wire([[CX+9,ym],[BUS,ym]],'b'); wl(CX+9,BUS,ym,'217 · 1722');
 })();
 
+/* ===== Силовая цепь пуска: батарея → Д1 → тяговый генератор → пусковая обмотка → Д2 ===== */
+var WINDS=[];
+function winding(x1,x2,y,lab,below){
+  var n=Math.max(3,Math.round((x2-x1)/14)),w=(x2-x1)/n,d='M'+x1+','+y;
+  for(var i=0;i<n;i++){d+=' a'+(w/2)+','+(w/2)+' 0 0 1 '+w+',0'}
+  mk('rect',{x:x1,y:y-2,width:x2-x1,height:4,'class':'pk-bg'},gE);
+  WINDS.push(mk('path',{d:d,'class':'pk-sym pk-wind'},gE));
+  if(lab) cap((x1+x2)/2,y+(below?18:-w/2-6),lab);
+}
+(function(){
+  var y=Y(32.4);
+  mk('line',{x1:14,y1:Y(30.4),x2:W-14,y2:Y(30.4),'class':'pk-sep'},gE);
+  tx(20,Y(30.4)+22,'Силовая цепь пуска','pk-tn','start',gT);
+  plus(20,y); tx(20,y-22,'БА «+»','pk-tp','start',gT);
+  row(y,[{p:20},'71',{k:96,s:'NO',l:'РБ',dev:'РБ',info:'РБ — рубильник аккумуляторной батареи. Перед пуском включён.'},{n:130},'101',{k:240,s:'NO',l:'Д1',pins:['','«+»'],info:'Д1 — силовой контакт пускового контактора: подключает «+» батареи к тяговому генератору.'},{n:290},'102',{n:360},'12×2',{coil:470,l:'Г',pins:['Я1','Я2']},{n:510},{n:660},{n:930},'103',{k:1000,s:'NO',l:'Д2',pins:['','«−»'],info:'Д2 — силовой контакт пускового контактора: подключает пусковую обмотку генератора к «−» батареи.'},'138',{n:1080},'462×3',{p:BUS}]);
+  tx(360,y+15,'О2','pk-tp','middle',gT); tx(660,y+15,'Д1','pk-tp','middle',gT); tx(930,y+15,'Д2','pk-tp','middle',gT);
+  tx(BUS-4,y+15,'4/1, 4, 5','pk-tp','end',gT);
+  winding(530,640,y,'доп. полюса');
+  winding(690,900,y,'пусковая обмотка главного генератора');
+  cap(470,y+34,'тяговый генератор');
+  stub(130,y,0,-26,'72 → ПП 80 А, цепи управления','');
+  stub(360,y,0,-26,'1575 → О1, дифф. обмотка возбудителя','');
+  stub(660,y,0,22,'');tx(666,y+30,'11×2 → ША2, к тяговым двигателям','pk-tp','start',gT);
+  wire([[1080,y],[1080,Y(33.6)]]); vl(1080,y,Y(33.6),'','r');
+  row(Y(33.6),[{p:20},'105',{k:96,s:'NO',l:'РБ',dev:'РБ'},{p:1080}]);
+  tx(20,Y(33.6)-22,'БА «−»','pk-tp','start',gT); wl(130,600,Y(33.6),'138');
+  mk('circle',{cx:20,cy:Y(33.6),r:3,'class':'pk-nd'},gE);
+})();
+
 
 /* ================= ЦЕПИ: объединение точек ================= */
 /* разбиваем провода в точках подключения, чтобы подсвечивать только нужные участки */
@@ -868,9 +909,14 @@ function onSeg(p,s){var a=s.a,b=s.b;
   if(a[1]===b[1]&&p[1]===a[1]) return p[0]>=Math.min(a[0],b[0])&&p[0]<=Math.max(a[0],b[0]);
   return false}
 TP.forEach(function(p){SEG.forEach(function(s){if(onSeg(p,s))u(key(p),key(s.a))})});
+u(key([20,Y(33.6)]),key(MINUSPT[0]));
 SEG.forEach(function(s){s.net=f(key(s.a))});
+SEG.forEach(function(g){var y2=Y(33.6),y1=Y(32.4);
+  if((g.a[1]===y2&&g.b[1]===y2)||(g.a[0]===1080&&g.b[0]===1080&&Math.min(g.a[1],g.b[1])>=y1)) g.pm=1;
+  if(g.a[1]===y1&&g.b[1]===y1&&Math.min(g.a[0],g.b[0])>=1080) g.px=1;});
 EL.forEach(function(e){e.n1=f(key(e.p1));e.n2=f(key(e.p2))});
 var SRC=PLUS.map(function(p){return f(key(p))}), MIN=f(key(MINUSPT[0]));
+function hasG(L){return L.some(function(e){return e.dev==='Г'})}
 
 /* ================= Логика аппаратов ================= */
 function closed(e,st){
@@ -878,7 +924,7 @@ function closed(e,st){
   if(e.tum) return !!st[e.key];
   var on;
   if(e.key) on=!!st[e.key];
-  else if(e.dev==='БУК') on=true;
+  else if(e.dev==='БУК'||e.dev==='РБ') on=true;
   else on=!!st[e.dev];
   return e.s==='NC'?!on:on;
 }
@@ -947,11 +993,12 @@ function coilPath(s,dev){
   var L=s.live.filter(function(e){return e.dev===dev}); if(!L.length) return null;
   var adj={},E=[];
   function ae(a,b,o){var k=E.length;E.push({a:a,b:b,o:o});(adj[a]=adj[a]||[]).push(k);(adj[b]=adj[b]||[]).push(k)}
-  SEG.forEach(function(g){if(s.P[g.net]&&g.net!==MIN)ae(key(g.a),key(g.b),g)});
-  s.sw.forEach(function(e){if(!e.dup&&s.P[e.n1]&&s.P[e.n2])ae(key(e.p1),key(e.p2),e)});
+  SEG.forEach(function(g){if((s.P[g.net]||s.M[g.net])&&g.net!==MIN)ae(key(g.a),key(g.b),g)});
+  s.sw.forEach(function(e){if(!e.dup&&((s.P[e.n1]&&s.P[e.n2])||(s.M[e.n1]&&s.M[e.n2])))ae(key(e.p1),key(e.p2),e)});
   var deg={};Object.keys(adj).forEach(function(n){deg[n]=adj[n].length});
   PLUS.forEach(function(q){var k=key(q);deg[k]=(deg[k]||0)+1});
-  L.forEach(function(e){[e.p1,e.p2].forEach(function(q){var k=key(q);if(s.P[f(k)])deg[k]=(deg[k]||0)+1})});
+  L.forEach(function(e){[e.p1,e.p2].forEach(function(q){var k=key(q);if(s.P[f(k)]||(s.M[f(k)]&&f(k)!==MIN))deg[k]=(deg[k]||0)+1})});
+  Object.keys(adj).forEach(function(k){if(f(k)===MIN)deg[k]=(deg[k]||0)+1});
   var dead={},ch=true;
   while(ch){ch=false;Object.keys(deg).forEach(function(n){if(deg[n]<=1&&deg[n]!==-99){deg[n]=-99;ch=true;(adj[n]||[]).forEach(function(k){if(dead[k])return;dead[k]=1;var o=E[k].a===n?E[k].b:E[k].a;if(deg[o]!==-99)deg[o]--})}})}
   var segs=[],els=[];E.forEach(function(e,k){if(!dead[k]){if(e.o.el)segs.push(e.o);else els.push(e.o)}});
@@ -970,11 +1017,13 @@ FR=STEPS.map(function(c){return {st:SIM[c.sim].st,s:SIM[c.sim].s,focus:c.focus||
   f.segs=segs;f.els=els;f.loads=loads;f.fsegs=fs;f.floads=fl;f.fdir=fdir;})})();
 window.__pk.FR2=FR;
 function segOn(f,g){
+  if(g.pm) return hasG(f.loads); if(g.px) return false;
   if(g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) return f.loads.length>0;
     return f.loads.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
   return f.segs.has(g);
 }
 function segFocus(f,g){
+  if(g.pm) return hasG(f.floads); if(g.px) return false;
   if(g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) return false;
     return f.floads.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
   return f.fsegs.has(g);
@@ -988,10 +1037,11 @@ function draw(){
     var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
     var A=g.a,B=g.b;
     if(segOn(fr,g)){ c+=' pk-on'; if(segFocus(fr,g)&&!(prev&&segOn(prev,g))){ c+=' pk-new';
-      var dv=fr.fdir.get(g); if(g.net===MIN) dv=(g.b[0]>=g.a[0])?1:-1; if(dv===-1){A=g.b;B=g.a} } }
+      var dv=fr.fdir.get(g); if(g.net===MIN) dv=g.pm?(g.a[0]===g.b[0]?(g.b[1]>g.a[1]?1:-1):(g.b[0]<=g.a[0]?1:-1)):((g.b[0]>=g.a[0])?1:-1); if(dv===-1){A=g.b;B=g.a} } }
     g.el.setAttribute('x1',A[0]);g.el.setAttribute('y1',A[1]);g.el.setAttribute('x2',B[0]);g.el.setAttribute('y2',B[1]);
     g.el.setAttribute('class',c);
   });
+  WINDS.forEach(function(w){w.setAttribute('class','pk-sym pk-wind'+(hasG(fr.floads)&&!(prev&&hasG(prev.loads))?' pk-wnew':hasG(fr.loads)?' pk-won':''))});
   EL.forEach(function(e){
     var cls='pk-el';
     if(e.kind==='sw'){
@@ -1001,7 +1051,7 @@ function draw(){
       if(cl!==was) cls+=' pk-chg';
       if(cl&&(fr.els.has(e)||(e.dup&&fr.els.has(e.dup)))) cls+=' pk-con';
     } else if(e.kind==='coil'){
-      if(fr.st[e.dev]) cls+=' pk-act';
+      if(fr.st[e.dev]||(e.dev==='Г'&&fr.s.pw['Г'])) cls+=' pk-act';
       var shown=fr.loads.indexOf(e)>=0;
       if(shown) cls+=' pk-pow';
       if(fr.focus.indexOf(e.dev)>=0) cls+=' pk-pnew';
