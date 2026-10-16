@@ -190,7 +190,7 @@ html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 #vp.pk-isfull .info{position:fixed;left:12px;right:12px;bottom:12px;z-index:52}
 @media (max-width:640px){.tabs{flex-wrap:wrap;overflow:visible;row-gap:2px}.tabs .tb{padding:8px 10px}}
 
-.pk-w.pk-on.pk-new{stroke:#4C9BEA;stroke-dasharray:7 4}
+.pk-w.pk-on.pk-new{stroke-dasharray:8 5}
 .pk-w.pk-nx{stroke:#9C95F0;stroke-width:2.6;stroke-dasharray:1 6;stroke-linecap:round}
 @media (prefers-reduced-motion:no-preference){.pk-w.pk-nx{animation:pkfd .7s linear infinite}.pk-w.pk-on.pk-new{animation:pkfd2 1s linear infinite}}
 @keyframes pkfd{to{stroke-dashoffset:-7}}
@@ -583,9 +583,9 @@ root.innerHTML=
 '<div class="prog" id="pk_prog" role="progressbar" aria-label="Шаг"><div class="plabel" id="pk_plabel"></div><div class="ptrack"><div class="pfill" id="pk_pfill"></div></div></div>'+
 '<button id="pk_next" class="btnp">Далее →</button></div></div>'+
 '<div class="legend pk-legend">'+
-'<span><i style="border-top:2.5px dashed #4C9BEA"></i>ток пошёл на этом шаге, контакт переключился</span>'+
-'<span><i style="border-top:2.5px dotted #9C95F0"></i>следующий шаг</span>'+
+'<span><i style="border-top:2.5px dashed #2BB386"></i>ток пошёл на этом шаге</span>'+
 '<span><i style="border-top:2.5px solid #2BB386"></i>ток есть</span>'+
+'<span><i style="border:1.5px dashed #4C9BEA;width:14px;height:10px;border-radius:3px"></i>аппарат переключился на этом шаге</span>'+
 '<span><i style="border-top:2.5px solid #EF9F27"></i>цепь подготовлена: напряжение дошло до разомкнутого контакта</span>'+
 '<span><i style="border-top:1.5px solid #5d6570"></i>тока нет</span></div>'+
 '<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><button id="pk_full" type="button" class="pk-fbtn">⛶ Во весь экран</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
@@ -936,7 +936,7 @@ function draw(){
     var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
     var on=wasOn(s,g);
     if(on){ c+=' pk-on'; if(prevS&&!wasOn(prevS,g)) c+=' pk-new'; }
-    else if(nxS&&wasOn(nxS,g)) c+=' pk-nx';
+
     else if(prep[g.net]) c+=' pk-prep';
     g.el.setAttribute('class',c);
   });
@@ -951,7 +951,7 @@ function draw(){
       if(waitEl[EL.indexOf(e)]) cls+=' pk-wait';
     } else if(e.kind==='coil'){
       if(fr.st[e.dev]) cls+=' pk-act';
-      if(s.pw[e.dev]&&!fr.st[e.dev]) cls+=' pk-next';
+
       if(prev&&!!prev.st[e.dev]!==!!fr.st[e.dev]) cls+=' pk-chg';
     } else return;
     if(sel) cls+=(e.dev===sel?' pk-sel':' pk-dim');
