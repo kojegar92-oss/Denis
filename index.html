@@ -195,6 +195,10 @@ html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 @media (prefers-reduced-motion:no-preference){.pk-w.pk-nx{animation:pkfd .7s linear infinite}.pk-w.pk-on.pk-new{animation:pkfd2 1s linear infinite}}
 @keyframes pkfd{to{stroke-dashoffset:-7}}
 @keyframes pkfd2{to{stroke-dashoffset:-11}}
+
+.pk-el.pk-pow .pk-coil{stroke:#2BB386;stroke-width:2.2}
+.pk-el.pk-pnew .pk-coil{stroke:#2BB386;stroke-width:3;stroke-dasharray:5 3;filter:drop-shadow(0 0 4px rgba(43,179,134,.8))}
+.pk-el.pk-act .pk-coil,.pk-el.pk-act.pk-chg .pk-coil{stroke-dasharray:none;filter:none}
 </style>
 </head>
 <body>
@@ -585,8 +589,9 @@ root.innerHTML=
 '<div class="legend pk-legend">'+
 '<span><i style="border-top:2.5px dashed #2BB386"></i>ток пошёл на этом шаге</span>'+
 '<span><i style="border-top:2.5px solid #2BB386"></i>ток есть</span>'+
+'<span><i style="border:2px dashed #2BB386;width:10px;height:14px;border-radius:2px"></i>катушка получила питание на этом шаге</span>'+
 '<span><i style="border:1.5px dashed #4C9BEA;width:14px;height:10px;border-radius:3px"></i>аппарат переключился на этом шаге</span>'+
-'<span><i style="border-top:2.5px solid #EF9F27"></i>цепь подготовлена: напряжение дошло до разомкнутого контакта</span>'+
+
 '<span><i style="border-top:1.5px solid #5d6570"></i>тока нет</span></div>'+
 '<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><button id="pk_full" type="button" class="pk-fbtn">⛶ Во весь экран</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
 '<div class="pk-fbar" id="pk_fbar"><button id="pk_fx" type="button" aria-label="Закрыть">✕</button><button id="pk_fp" type="button" class="btnp" aria-label="Назад">←</button><div class="pk-ft" id="pk_ft"></div><button id="pk_fn" type="button" class="btnp" aria-label="Далее">→</button><button id="pk_fo" type="button" aria-label="Уменьшить">−</button><button id="pk_fi" type="button" aria-label="Увеличить">+</button></div>'+
@@ -937,7 +942,6 @@ function draw(){
     var on=wasOn(s,g);
     if(on){ c+=' pk-on'; if(prevS&&!wasOn(prevS,g)) c+=' pk-new'; }
 
-    else if(prep[g.net]) c+=' pk-prep';
     g.el.setAttribute('class',c);
   });
   EL.forEach(function(e){
@@ -948,9 +952,9 @@ function draw(){
                 else{e.bl.setAttribute('x2',cl?13:11);e.bl.setAttribute('y2',cl?0:-11)} }
       if(cl!==was) cls+=' pk-chg';
       if(cl&&s.cur[e.n1]&&s.cur[e.n2]) cls+=' pk-con';
-      if(waitEl[EL.indexOf(e)]) cls+=' pk-wait';
     } else if(e.kind==='coil'){
       if(fr.st[e.dev]) cls+=' pk-act';
+      if(s.pw[e.dev]){ cls+=' pk-pow'; if(!prevS||!prevS.pw[e.dev]) cls+=' pk-pnew'; }
 
       if(prev&&!!prev.st[e.dev]!==!!fr.st[e.dev]) cls+=' pk-chg';
     } else return;
