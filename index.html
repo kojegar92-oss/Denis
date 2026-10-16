@@ -209,12 +209,64 @@ html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 
 .pk-w.pk-on.pk-new{stroke:#A79FF5;stroke-width:3;stroke-dasharray:8 5}
 .pk-el.pk-pnew .pk-coil{stroke:#A79FF5;filter:drop-shadow(0 0 4px rgba(167,159,245,.85))}
+
+/* --- неисправности: режим на схеме --- */
+.pk-w.pk-up{stroke:#EF9F27;stroke-width:2.6}
+.pk-el.pk-bad .pk-coil{stroke:#e5534b;stroke-width:2.6;fill:rgba(229,83,75,.18)}
+.pk-el.pk-bad .pk-bl{stroke:#e5534b}
+.pk-el.pk-bad .pk-fr{fill:rgba(229,83,75,.14);stroke:#e5534b;stroke-width:1.6}
+.pk-el.pk-bad .pk-tn{fill:#ff8a80}
+.pk-jg{display:none}
+.pk-jg.on{display:inline}
+.pk-jmp{fill:none;stroke:#f5c542;stroke-width:3;stroke-linecap:round}
+.pk-jg.new .pk-jmp{stroke-dasharray:8 5}
+@media (prefers-reduced-motion:no-preference){.pk-jg.new .pk-jmp{animation:pkfd2 1s linear infinite}}
+.pk-jdot{fill:#f5c542}
+.pk-jlab{font:700 12px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#f5c542}
+#pk_sv text.pk-jlab{stroke:#14171c}
+.pk-fban{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin:0 0 8px;padding:10px 12px;border-radius:10px;background:var(--surface-1);border:1px solid #e5534b}
+.pk-fbt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pk-fbt b{color:#e5534b;font-size:calc(var(--fs) + 1px)}
+.pk-fleg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--text-secondary);align-items:center}
+.pk-fleg i{display:inline-block;width:20px;height:0;border-top:2.5px solid;margin-right:-8px}
+.pk-lgo{border-color:#EF9F27!important}.pk-lgr{border-color:#e5534b!important}.pk-lgy{border-top:2.5px dashed #f5c542!important}
+.pk-fbb{display:flex;gap:8px;flex-wrap:wrap}
+.pk-fbb button{padding:7px 12px}
+/* --- неисправности: список --- */
+.fl-intro{color:var(--text-secondary);font-size:calc(var(--fs) - 1px);margin:0 0 14px;max-width:70ch}
+.fl-g{font-size:calc(var(--fs) + 2px);font-weight:600;margin:18px 0 8px}
+.fl{border:1px solid var(--border);border-radius:10px;background:var(--surface-2);margin:0 0 8px}
+.fl summary{cursor:pointer;padding:12px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;list-style:none}
+.fl summary::-webkit-details-marker{display:none}
+.fl summary::before{content:'›';display:inline-block;transition:transform .2s;color:var(--text-secondary);font-size:18px;line-height:1}
+.fl[open] summary::before{transform:rotate(90deg)}
+.fl-t{font-weight:600;flex:1;min-width:0}
+.fl-tag{font-size:11px;padding:1px 7px;border-radius:10px;background:var(--surface-1);color:var(--text-secondary);border:0.5px solid var(--border)}
+.fl-b{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.fl-row{display:grid;grid-template-columns:92px 1fr;gap:10px;line-height:1.55}
+.fl-row ol{margin:0;padding-left:1.2em}.fl-row li{margin:0 0 4px}
+.fl-l{color:var(--text-secondary);font-size:calc(var(--fs) - 1px)}
+.fl-j{padding:9px 12px;border-radius:8px;background:rgba(245,197,66,.14);border-left:4px solid #f5c542;line-height:1.55}
+.fl-w{padding:9px 12px;border-radius:8px;background:rgba(229,83,75,.12);border-left:4px solid #e5534b;line-height:1.55}
+.fl-show{align-self:flex-start}
+.fl-ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.fl-ph figure{margin:0}
+.fl-img{padding:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;display:block;width:100%;background:#fff;cursor:zoom-in}
+.fl-img img{display:block;width:100%;height:auto}
+.fl-ph figcaption{font-size:12px;color:var(--text-secondary);margin:4px 0 0}
+.fl-src{font-size:12px;color:var(--text-muted)}
+.fl-lb{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) 12px 12px;gap:8px}
+.fl-lb[hidden]{display:none}
+.fl-lb img{max-width:100%;max-height:85vh;border-radius:6px;background:#fff}
+.fl-lb div{color:#eee;font-size:14px;text-align:center}
+.fl-x{position:absolute;top:max(10px,env(safe-area-inset-top,0px));right:12px;color:#fff;border-color:#888;background:rgba(0,0,0,.4)}
+@media (max-width:640px){.fl-row{grid-template-columns:1fr;gap:2px}}
 </style>
 </head>
 <body>
 <main>
 <h1>Пуск дизеля ТЭМ18ДМ</h1>
-<div class="tabs"><button class="tb on" data-t="d">Условная схема</button><button class="tb" data-t="p">Принципиальная схема</button><button class="tb" data-t="k">Последовательность</button></div>
+<div class="tabs"><button class="tb on" data-t="d">Условная схема</button><button class="tb" data-t="p">Принципиальная схема</button><button class="tb" data-t="k">Последовательность</button><button class="tb" data-t="f">Неисправности</button></div>
 <div id="vd">
 <div class="top">
 <div class="card">
@@ -245,6 +297,7 @@ html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 <div id="kinfo" class="info"></div>
 </div>
 <div id="vp" hidden></div>
+<div id="vf" hidden></div>
 </main>
 <script>
 var T=function(){return true};
@@ -485,7 +538,7 @@ else{var q=INFO[KB[ksel][0]];ki.innerHTML='<div style="font-weight:500;margin:0 
 function kpick(e){var t=e.target.closest?e.target.closest('[data-i]'):null;var i=t?+t.getAttribute('data-i'):-1;ksel=(i>=0&&i!==ksel)?i:-1;kdraw()}
 document.getElementById('ksv').addEventListener('click',kpick);
 document.getElementById('ksv').addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute&&e.target.getAttribute('data-i')!==null){e.preventDefault();kpick(e)}});
-function showTab(t){curTab=t;document.getElementById('vd').hidden=t!=='d';document.getElementById('vk').hidden=t!=='k';document.getElementById('vp').hidden=t!=='p';if(t==='p'&&window.__pkShow)window.__pkShow();Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.className='tb'+(b.getAttribute('data-t')===t?' on':'')})}
+function showTab(t){curTab=t;document.getElementById('vd').hidden=t!=='d';document.getElementById('vk').hidden=t!=='k';document.getElementById('vp').hidden=t!=='p';document.getElementById('vf').hidden=t!=='f';if(t==='p'&&window.__pkShow)window.__pkShow();Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.className='tb'+(b.getAttribute('data-t')===t?' on':'')})}
 Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.onclick=function(){showTab(b.getAttribute('data-t'))}});
 document.addEventListener('keydown',function(e){
 if(e.key==='Escape'){if(curTab==='d'&&sel){sel=null;draw()}if(curTab==='k'&&ksel>=0){ksel=-1;kdraw()}}
@@ -574,6 +627,95 @@ window.PK_STEPS=[
 ];
 
 })();
+/* ===== Раздел «Неисправности»: данные ===== */
+(function(){
+function p(d){return '<span class="pl">'+d+'</span>'}
+window.PK_FAULTS=[
+/* ---------- ПУСК ДИЗЕЛЯ (есть показ на схеме) ---------- */
+{id:'ru12',grp:'Пуск дизеля',title:'Не включается РУ12',src:'Памятка «Неисправности ТЭМ-18ДМ»',
+ sign:'При нажатии кнопки «Пуск дизеля» не включается реле '+p('РУ12')+', топливный насос не запускается.',
+ checks:['Включить '+p('РУ12')+' принудительно.',
+  'Проверить «+» на клемме 14/4. Если нет — перемычка 14/1 – 14/4.',
+  'Осмотреть '+p('РУ12')+': целостность контактов и работоспособность.',
+  'Проверить «−» на '+p('РУ12')+' контрольной лампой от «+» АБ на провода 973, 704. Если лампа не горит — перемычка от «−» АБ на провода 973, 704.',
+  'Проверить «+» на '+p('РУ12')+' при нажатой кнопке ПД1: контрольной лампой от «−» АБ на клемму 6/6 или провода 692, 703.',
+  'Проверить «+» на клеммах 6/6, 6/9, 15/8 при нажатой ПД1. Где «+» нет — перемычка туда от «+» АБ.'],
+ jumper:'Если всё в норме, а '+p('РУ12')+' не включается: перемычка с замыкающего контакта '+p('РУ12')+' провод 734 на замыкающий контакт '+p('РУ12')+' провод 575.',
+ warn:'Глушить тепловоз только снятием перемычки.',
+ scheme:{bad:'РУ12',coilFault:true,target:['КТН'],jmp:'J_РУ12',title:'Не включается РУ12',
+  steps:[
+   {tag:'Что случилось',title:'Катушка '+p('РУ12')+' получает питание, но реле не включается',text:'Кнопка '+p('В27')+' нажата, ток через кнопки «Стоп» и '+p('ПЧТ')+' доходит до катушки '+p('РУ12')+', но реле не срабатывает. Его контакты 734–733 и 561–575 остаются разомкнутыми — '+p('КТН')+' питания не получает, пуск не идёт.'},
+   {tag:'Перемычка',title:'Перемычка 734 – 575: '+p('КТН')+' получил питание',text:'Перемычка соединяет провод 734 (питание с 11/8 через провод 805) с проводом 575 в обход обоих контактов '+p('РУ12')+'. «+» по проводам 577, 1563, 583, 581 пришёл на катушку '+p('КТН')+' — '+p('КТН')+' получил питание.',chain:'11/8 → 800 → 805 → 734 → <b>перемычка</b> → 575 → 577 → 1563 → 583 → 581 → '+p('КТН')+' → минус'},
+   {tag:'Дальше',title:'Пуск идёт обычным порядком',text:'От провода 575 питаются цепи прокачки, проворота и '+p('РУ4')+', поэтому пуск проходит до конца без '+p('РУ12')+'. Перемычка остаётся на месте, пока работает дизель. <b>Глушить тепловоз только снятием перемычки</b> — кнопки «Стоп» действуют на катушку '+p('РУ12')+', а не на эту цепь.'}]}},
+
+{id:'vpu',grp:'Пуск дизеля',title:'Не включается Д1: блокировка валоповоротного механизма',src:'Памятка; презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Масло прокачано, '+p('РУ5')+' включилось, а пусковые контакторы '+p('Д1')+' и '+p('Д2')+' не включаются, вал не проворачивается.',
+ checks:['Проверить положение рукоятки блокировки тормоза усл. № 367 ('+p('БУК')+').','Проверить валоповоротный механизм — особенно после ремонта тепловоза: он должен быть выведен из зацепления.'],
+ jumper:'Для обхода блокировки валоповоротного механизма — перемычка между проводами 239 и 243.',
+ warn:'Перед установкой убедиться в исправной работе всех предшествующих аппаратов, участвующих в схеме запуска дизеля.',
+ photos:[['vpu.jpg','Клеммы блокировки валоповоротного механизма: провода 239 и 243']],
+ scheme:{bad:'ВПУ',target:['Д1','Д2'],jmp:'J_ВПУ',title:'Не включается Д1: блокировка ВПУ',stop:function(st){return st['РВ5']},
+  steps:[
+   {tag:'Что случилось',title:'Цепь '+p('Д1')+' разорвана на блокировке '+p('ВПУ'),text:p('РУ5')+' включилось, «+» прошёл через '+p('РУ5')+', '+p('КВ')+' и провод 239 и дошёл до блокировки '+p('ВПУ')+' (оранжевым). Блокировка разомкнута — катушки '+p('Д1')+' и '+p('Д2')+' питания не получают.'},
+   {tag:'Перемычка',title:'Перемычка 239 – 243: '+p('Д1')+' и '+p('Д2')+' получили питание',text:'Перемычка соединяет провода 239 и 243 в обход блокировки '+p('ВПУ')+'. Катушки пусковых контакторов '+p('Д1')+' и '+p('Д2')+' получили питание.',chain:'454 → '+p('РУ5')+' → 425 → '+p('КВ')+' → 235 → 239 → <b>перемычка</b> → 243 → 251 → '+p('Д1')+', '+p('Д2')+' → минус'},
+   {tag:'Дальше',title:'Пуск идёт обычным порядком',text:'Генератор проворачивает вал, '+p('БМ')+' подаёт топливо, по давлению масла включается '+p('РУ4')+', после выдержки '+p('РВ2')+' '+p('Д1')+' и '+p('Д2')+' отключаются, включается '+p('КУ17')+'. Перед установкой перемычки обязательно убедиться, что валоповоротный механизм действительно выведен.'}]}},
+
+{id:'rdm',grp:'Пуск дизеля',title:'Дизель не запускается: не замыкается РДМ',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»; памятка',
+ sign:'Вал проворачивается, но '+p('РУ4')+' не включается: реле давления масла '+p('РДМ')+' не даёт запустить дизель при давлении масла меньше 1,8 кгс/см².',
+ checks:['Проверить работу маслопрокачивающего насоса.','Проверить закрытие крана № 3 в шахте холодильника.','Проверить уровень масла в системе дизеля.'],
+ jumper:'Перемычка между проводами 145 и 125 (нумерация ТЭМ18ДМ). На схеме ТЭМ18Д — между выводами 2Д и 1Д реле '+p('РДМ')+' (провода 126 и 125).',
+ warn:'Ставить только после проверки маслопрокачивающего насоса и крана № 3. С перемычкой обязательно контролировать давление масла в системе.',
+ photos:[['rdm1.jpg','РДМ1: клеммная коробка, провода 145 и 125; кран № 3']],
+ scheme:{bad:'РДМ',ok:{'РДМ':true},target:['РУ4'],jmp:'J_РДМ',title:'Дизель не запускается: РДМ',stop:function(st){return st['БМ']},
+  steps:[
+   {tag:'Что случилось',title:'Цепь '+p('РУ4')+' разорвана на '+p('РДМ'),text:'Идёт проворот, блок-контакт '+p('Д1')+' подал «+» через провода 133, 144, 145 до реле давления масла '+p('РДМ')+' (оранжевым). Контакт '+p('РДМ')+' не замыкается — катушка '+p('РУ4')+' питания не получает, схема пуска не разбирается.'},
+   {tag:'Перемычка',title:'Перемычка на '+p('РДМ')+': '+p('РУ4')+' получило питание',text:'Перемычка соединяет выводы 2Д и 1Д реле '+p('РДМ')+' в обход его контакта. Катушка '+p('РУ4')+' получила питание.',chain:'133 → 144 → 145 → 12Д → 126 → <b>перемычка</b> → 125 → 560 → 580 → '+p('РУ4')+' → минус'},
+   {tag:'Дальше',title:'Пуск заканчивается обычным порядком',text:p('РУ4')+' встаёт на самопитание, отключает '+p('РУ7')+' и '+p('КМН')+'; после выдержки '+p('РВ2')+' отключаются '+p('Д1')+' и '+p('Д2')+', включается '+p('КУ17')+'. <b>Защиты по давлению масла больше нет — давление контролировать постоянно.</b>'}]}},
+
+{id:'ru5',grp:'Пуск дизеля',title:'Не включается Д1 после прокачки масла',src:'Памятка «Неисправности ТЭМ-18ДМ»',
+ sign:'Масло прокачано, но '+p('РУ5')+' не включается — '+p('Д1')+' и '+p('Д2')+' не получают питания.',
+ checks:['Проверить положение рукоятки блокировки тормоза усл. № 367 и валоповоротный механизм.','После прокачки масла по системе в течение 25–30 с вручную нажать на реле '+p('РУ5')+' и держать до включения реле '+p('РУ4')+' плюс 3–4 с.'],
+ scheme:{bad:'РУ5',coilFault:true,manual:'РУ5',target:['Д1','Д2'],release:{when:'РУ4'},title:'Не включается Д1 после прокачки',stop:function(st){return st['РУ29']},
+  steps:[
+   {tag:'Что случилось',title:p('РУ5')+' не включается',text:'Масло прокачано, '+p('РУ29')+' подало питание на катушку '+p('РУ5')+', но реле не срабатывает. Его контакт 454–425 разомкнут — '+p('Д1')+' и '+p('Д2')+' питания не получают.'},
+   {tag:'Вручную',title:p('РУ5')+' нажато вручную: '+p('Д1')+' и '+p('Д2')+' получили питание',text:'Якорь реле '+p('РУ5')+' прижат рукой, его контакты замкнулись. Катушки '+p('Д1')+' и '+p('Д2')+' получили питание, начинается проворот.',chain:'454 → '+p('РУ5')+' (нажато) → 425 → '+p('КВ')+' → 239 → '+p('ВПУ')+' → 243 → 251 → '+p('Д1')+', '+p('Д2')+' → минус'},
+   {tag:'Дальше',title:'Отпустить РУ5 после включения РУ4 + 3–4 с',text:'Держать '+p('РУ5')+' до включения '+p('РУ4')+' и ещё 3–4 с. После отпускания '+p('Д1')+' и '+p('Д2')+' отключаются, включается '+p('КУ17')+' — дизель работает.'}]}},
+
+/* ---------- СХЕМА ТЯГИ (фото и описание) ---------- */
+{id:'ru15kv',grp:'Схема тяги',title:'Не собирается схема тяги: перемычка РУ15 – КВ',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Схема тяги не собирается, '+p('КВ')+' не включается.',
+ jumper:'Перемычка с провода '+p('РУ15')+' 1973 на провод '+p('КВ')+' 181/187.',
+ warn:'Перемычкой отключаются все блокировки, ограничивающие сбор схемы тяги. Перед установкой проверить исправность всех аппаратов схемы тяги от '+p('РУ15')+' до '+p('КВ')+' и '+p('РКВ')+'.',
+ photos:[['tyaga_sbor.jpg','Где на схеме и в аппаратной камере провода 1973 и 181/187'],['ru15_kv.jpg','Установка перемычки РУ15 – КВ']]},
+{id:'p1p2',grp:'Схема тяги',title:'Не включаются поездные контакторы П1 – П2',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Не включается один из поездных контакторов '+p('П1')+' или '+p('П2')+'.',
+ jumper:'Перемычки на провод 194 ('+p('П1')+') и провод 196 ('+p('П2')+'). При пробое диодного моста РДТМ — 4 перемычки на 4 верхних контакта между '+p('П1')+' и '+p('П2')+'.',
+ photos:[['p1_p2.jpg','Поездные контакторы П1 и П2, провода 194 и 196']]},
+{id:'rdm2',grp:'Схема тяги',title:'РДМ2 не даёт собрать схему тяги',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:p('РДМ2')+' не соберёт схему тяги при давлении масла менее 2 кгс/см² (цепь сброса нагрузки по давлению масла, провода 213 – 214).',
+ jumper:'Перемычка на клеммы '+p('РДМ2')+'.',
+ warn:'Прежде чем ставить перемычку на '+p('РДМ2')+', проверить закрытие крана № 3 в шахте холодильника.',
+ photos:[['rdm2.jpg','РДМ2: клеммы под перемычку']]},
+
+/* ---------- ХОЛОДИЛЬНИК И ДИЗЕЛЬ ---------- */
+{id:'zhb',grp:'Холодильник и дизель',title:'Аварийное открытие боковых жалюзи',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Боковые жалюзи холодильника не открываются.',
+ checks:['Спецключом или ключом на 17 повернуть привод жалюзи.','Вставить клин в ручку открытия. Клинья — на стенке холодильника со стороны дизельного помещения.'],
+ photos:[['zhaluzi_bok.jpg','Привод и клин боковых жалюзи']]},
+{id:'zhv',grp:'Холодильник и дизель',title:'Аварийное открытие верхних жалюзи',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Верхние жалюзи холодильника не открываются.',
+ checks:['Нажать на пневмовентиль ВН3 и вставить клин в рычаг привода.','При неработающем пневмовентиле: ключом на 14–17 опустить рукоятку рычага вниз и вставить клин.','Клин — на цепочке привода открытия жалюзи.'],
+ photos:[['zhaluzi_verh.jpg','Пневмовентиль ВН3 и рычаг привода верхних жалюзи']]},
+{id:'tnvd',grp:'Холодильник и дизель',title:'Отключение ТНВД',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Нужно исключить работу одного ТНВД.',
+ checks:['При нормальной работе привод ТНВД в зацеплении с поводком предельного выключателя.','Вытянуть поводок ТНВД на себя, вывести из зацепления и поставить поводок в паз блока ТНВД.'],
+ photos:[['tnvd.jpg','Поводки ТНВД: в зацеплении и выведенный']]},
+{id:'spst',grp:'Пожарная сигнализация',title:'Проверка пожарной сигнализации',src:'Презентация «Устранение неисправностей ТЭМ18ДМ»',
+ sign:'Проверка блоков СПСТ (ящик за спиной машиниста, сверху).',
+ checks:['Включить тумблер питания.','Нажать кнопку «Тест индикации».','На дублирующем блоке проверить индикацию пожарных извещателей.','Убедиться в отсутствии сигнала о неисправности.'],
+ photos:[['spst.jpg','Блок коммутации и дублирующий блок СПСТ']]}
+];
+})();
 
 /* ===== Вкладка «Плакат ТЭМ18Д»: схема пуска по плакату, ток рассчитывается по проводам ===== */
 (function(){
@@ -582,6 +724,7 @@ var NS='http://www.w3.org/2000/svg';
 
 /* ---------- разметка вкладки ---------- */
 root.innerHTML=
+'<div class="pk-fban" id="pk_fban" hidden><div class="pk-fbt"><b id="pk_fname"></b><span class="pk-fleg"><i class="pk-lgo"></i>напряжение доходит до неисправного места <i class="pk-lgr"></i>неисправный аппарат <i class="pk-lgy"></i>перемычка</span></div><div class="pk-fbb"><button type="button" id="pk_fback">← К неисправностям</button><button type="button" id="pk_fpusk">Обычный пуск</button></div></div>'+
 '<div class="top"><div class="card"><div id="pk_tag" class="tag"></div><div id="pk_title" class="hd"></div><div id="pk_desc" class="desc"></div></div>'+
 '<div class="bar"><button id="pk_prev" class="btnp">← Назад</button>'+
 '<div class="prog" id="pk_prog" role="progressbar" aria-label="Шаг"><div class="plabel" id="pk_plabel"></div><div class="ptrack"><div class="pfill" id="pk_pfill"></div></div></div>'+
@@ -832,6 +975,21 @@ jd(380,Y(28));
 })();
 
 
+/* ===== Перемычки для раздела «Неисправности» (видны только в режиме неисправности) ===== */
+function jumper(id,p1,p2,d,lx,ly,lab){
+  var g=mk('g',{'class':'pk-el pk-jg','data-dev':id},gE);
+  var path=mk('path',{d:d,'class':'pk-jmp'},g);
+  mk('circle',{cx:p1[0],cy:p1[1],r:4.5,'class':'pk-jdot'},g); mk('circle',{cx:p2[0],cy:p2[1],r:4.5,'class':'pk-jdot'},g);
+  tx(lx,ly,lab,'pk-jlab','middle',g);
+  EL.push({kind:'sw',dev:id,label:lab,jumper:true,p1:p1,p2:p2,g:g,path:path});
+}
+(function(){
+  var y=Y(18); jumper('J_ВПУ',[665,y],[715,y],'M665,'+y+' C665,'+(y+58)+' 715,'+(y+58)+' 715,'+y,690,y+56,'перемычка 239 – 243');
+  y=Y(22); jumper('J_РДМ',[705,y],[765,y],'M705,'+y+' C705,'+(y+50)+' 765,'+(y+50)+' 765,'+y,735,y+50,'перемычка на РДМ');
+  var a=[111,Y(1.5)], b=[470,Y(17)];
+  jumper('J_РУ12',a,b,'M'+a[0]+','+a[1]+' C'+(a[0]+260)+','+(a[1]-10)+' '+(b[0]+120)+','+(b[1]-260)+' '+b[0]+','+b[1],330,Y(9.6),'перемычка 734 – 575');
+})();
+
 /* ================= ЦЕПИ: объединение точек ================= */
 /* разбиваем провода в точках подключения, чтобы подсвечивать только нужные участки */
 (function(){
@@ -874,7 +1032,9 @@ var SRC=PLUS.map(function(p){return f(key(p))}), MIN=f(key(MINUSPT[0]));
 
 /* ================= Логика аппаратов ================= */
 function closed(e,st){
+  if(e.jumper) return st.jmp===e.dev;
   if(e.dev==='РМС') return false;
+  if(st['F_'+e.dev]&&!e.tum&&!e.key) return false;
   if(e.tum) return !!st[e.key];
   var on;
   if(e.key) on=!!st[e.key];
@@ -963,12 +1123,57 @@ function coilPath(s,dev){
 }
 FR=STEPS.map(function(c){return {st:SIM[c.sim].st,s:SIM[c.sim].s,focus:c.focus||[],c:c}});
 /* какие катушки уже «показаны» к каждому шагу */
-(function(){var rev={};FR.forEach(function(f){f.focus.forEach(function(d){rev[d]=1});f.rev=Object.assign({},rev);
+function prep(FR,rev0){var rev=Object.assign({},rev0||{});FR.forEach(function(f){(f.revAdd||[]).forEach(function(d){rev[d]=1});f.focus.forEach(function(d){rev[d]=1});f.rev=Object.assign({},rev);
   var segs=new Set(),els=new Set(),loads=[],fs=new Set(),fl=[],fdir=new Map();
   Object.keys(rev).forEach(function(d){var pth=coilPath(f.s,d);if(!pth)return;pth.segs.forEach(function(g){segs.add(g)});pth.els.forEach(function(e){els.add(e)});loads=loads.concat(pth.loads);
     if(f.focus.indexOf(d)>=0){pth.segs.forEach(function(g){fs.add(g)});pth.dir.forEach(function(v,g){fdir.set(g,v)});fl=fl.concat(pth.loads)}});
-  f.segs=segs;f.els=els;f.loads=loads;f.fsegs=fs;f.floads=fl;f.fdir=fdir;})})();
+  f.segs=segs;f.els=els;f.loads=loads;f.fsegs=fs;f.floads=fl;f.fdir=fdir;})}
+prep(FR);
 window.__pk.FR2=FR;
+var PUSK=FR;
+
+/* ===== Режим «Неисправность»: тот же расчёт тока, но с неисправным аппаратом и перемычкой ===== */
+function runSim(st0,stopFn,hook){
+  var st=clone(st0),out=[],g=0;
+  function val(d,pw){return st['M_'+d]?true:(st['C_'+d]?false:!!pw[d])}
+  while(g++<60){
+    if(hook)hook(st);
+    var s=solve(st),chg=[];
+    RELAYS.forEach(function(d){if(val(d,s.pw)!==!!st[d])chg.push(d)});
+    if(chg.length){chg.forEach(function(d){st[d]=val(d,s.pw);if(d==='РВ2'&&st[d])st['РВ2к']=true;if(d==='РВ3'&&!st[d])st['РВ3к']=false;if(d==='РВ5'&&!st[d])st['РВ5к']=false});out.push(clone(st));continue}
+    if(stopFn&&stopFn(st))break;
+    if(st['Д1']&&!st['РДМ']){st['РДМ']=true;out.push(clone(st));continue}
+    if(st['РВ3']&&!st['РВ3к']){st['РВ3к']=true;out.push(clone(st));continue}
+    if(!st['РВ2']&&st['РВ2к']){st['РВ2к']=false;out.push(clone(st));continue}
+    if(st['РВ5']&&!st['РВ5к']){st['РВ5к']=true;out.push(clone(st));continue}
+    break;
+  }
+  return st;
+}
+function onDevs(st){return RELAYS.filter(function(d){return st[d]})}
+function upTo(sNow,stOk,target){ /* участок цепи от «+» до неисправного места: где напряжение есть, а тока нет */
+  var s2=solve(stOk),set=new Set();
+  target.forEach(function(d){var pth=coilPath(s2,d);if(pth)pth.segs.forEach(function(g){if(sNow.P[g.net]&&g.net!==MIN)set.add(g)})});
+  return set;
+}
+var FAULTS={};
+function buildFault(id,F){
+  var FK=(F.coilFault?'C_':'F_')+F.bad; var init={'В28р':true,'В27':true}; init[FK]=true;
+  var S1=runSim(init,F.stop);
+  var s1=solve(S1);
+  var okSt=clone(S1); delete okSt[FK]; if(F.ok)Object.keys(F.ok).forEach(function(k){okSt[k]=F.ok[k]});
+  var A={st:S1,s:s1,focus:[],c:F.steps[0],bad:F.bad,revAdd:onDevs(S1).concat(F.coilFault&&s1.pw[F.bad]?[F.bad]:[]),orange:F.coilFault?new Set():upTo(s1,okSt,F.target)};
+  var S2=clone(S1); if(F.jmp)S2.jmp=F.jmp; if(F.manual){S2['M_'+F.manual]=true;S2[F.manual]=true}
+  var s2=solve(S2);
+  var foc=F.target.filter(function(d){return s2.pw[d]});
+  var B={st:S2,s:s2,focus:foc,c:F.steps[1],bad:F.bad,jnew:true};
+  var S3=runSim(S2,null,F.release?function(st){if(st[F.release.when]&&st['M_'+F.manual]){delete st['M_'+F.manual]}}:null);
+  var C={st:S3,s:solve(S3),focus:[],c:F.steps[2],bad:F.bad,revAdd:onDevs(S3)};
+  var list=[A,B,C]; prep(list); FAULTS[id]={list:list,F:F};
+}
+(window.PK_FAULTS||[]).forEach(function(F){if(F.scheme)buildFault(F.id,F.scheme)});
+var FMODE=null;
+
 function segOn(f,g){
   if(g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) return f.loads.length>0;
     return f.loads.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
@@ -987,6 +1192,7 @@ function draw(){
   SEG.forEach(function(g){
     var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
     var A=g.a,B=g.b;
+    if(fr.orange&&fr.orange.has(g)&&!segOn(fr,g)) c+=' pk-up';
     if(segOn(fr,g)){ c+=' pk-on'; if(segFocus(fr,g)&&!(prev&&segOn(prev,g))){ c+=' pk-new';
       var dv=fr.fdir.get(g); if(g.net===MIN) dv=(g.b[0]>=g.a[0])?1:-1; if(dv===-1){A=g.b;B=g.a} } }
     g.el.setAttribute('x1',A[0]);g.el.setAttribute('y1',A[1]);g.el.setAttribute('x2',B[0]);g.el.setAttribute('y2',B[1]);
@@ -994,6 +1200,7 @@ function draw(){
   });
   EL.forEach(function(e){
     var cls='pk-el';
+    if(e.jumper){ var on=closed(e,fr.st); e.g.setAttribute('class','pk-el pk-jg'+(on?' on':'')+(on&&fr.jnew?' new':'')); return; }
     if(e.kind==='sw'){
       var cl=closed(e,fr.st), was=prev?closed(e,prev.st):cl;
       if(e.bl){ if(e.tum){var yy=+e.bl.getAttribute('y1');e.bl.setAttribute('x2',cl?160:156);e.bl.setAttribute('y2',cl?yy:yy-10)}
@@ -1007,11 +1214,12 @@ function draw(){
       if(fr.focus.indexOf(e.dev)>=0) cls+=' pk-pnew';
       if(prev&&!!prev.st[e.dev]!==!!fr.st[e.dev]) cls+=' pk-chg';
     } else return;
+    if(fr.bad&&e.dev===fr.bad) cls+=' pk-bad';
     if(sel) cls+=(e.dev===sel?' pk-sel':' pk-dim');
     e.g.setAttribute('class',cls);
   });
   var c=fr.c||{};
-  document.getElementById('pk_tag').textContent='Шаг '+(cur+1)+' из '+FR.length+(c.tag?' · '+c.tag:'');
+  document.getElementById('pk_tag').textContent=(FMODE?'Неисправность · ':'')+'Шаг '+(cur+1)+' из '+FR.length+(c.tag?' · '+c.tag:'');
   document.getElementById('pk_title').innerHTML=c.title||'';
   document.getElementById('pk_desc').innerHTML='<p class="pk-txt">'+(c.text||'')+'</p>'+(c.chain?'<div class="pk-chain"><span class="pk-cl">Цепь:</span> '+c.chain+'</div>':'');
   document.getElementById('pk_plabel').textContent='Шаг '+(cur+1)+' из '+FR.length;
@@ -1064,7 +1272,56 @@ document.getElementById('pk_zi').onclick=zin;
 document.getElementById('pk_zo').onclick=zout;
 document.getElementById('pk_zf').onclick=fit;
 window.__pkShow=function(){ if(z===null) fit(); };
+function showBad(){
+  if(!FMODE) return; var fr=FR[cur]; var e=EL.find(function(x){return x.dev===fr.bad&&x.p1});
+  var foc=(fr.floads&&fr.floads[0])||e; if(!foc||z===null) return;
+  var y=foc.p1[1]*z, x=foc.p1[0]*z;
+  sheet.scrollTop=Math.max(0,y-sheet.clientHeight*0.6); sheet.scrollLeft=Math.max(0,x-sheet.clientWidth*0.6);
+}
+function setMode(id){
+  FMODE=id||null; FR=id?FAULTS[id].list:PUSK; sel=null; info.hidden=true;
+  var ban=document.getElementById('pk_fban'); ban.hidden=!id;
+  if(id) document.getElementById('pk_fname').textContent=FAULTS[id].F.title;
+  go(0); setTimeout(showBad,40);
+}
+window.__pkFault=function(id){ if(!FAULTS[id])return; setMode(id); window.scrollTo(0,0) };
+var _go0=go; go=function(i){_go0(i); if(FMODE) setTimeout(showBad,20)};
+window.__pkPusk=function(){ if(FMODE) setMode(null) };
+var tbP=document.querySelector('.tb[data-t="p"]'); if(tbP) tbP.addEventListener('click',function(){window.__pkPusk()});
+document.getElementById('pk_fback').onclick=function(){ if(typeof showTab==='function')showTab('f'); setMode(null); window.scrollTo(0,0) };
+document.getElementById('pk_fpusk').onclick=function(){ setMode(null) };
+
 go(0);
+})();
+/* ===== Раздел «Неисправности»: список карточек ===== */
+(function(){
+var root=document.getElementById('vf'); if(!root) return;
+var F=window.PK_FAULTS||[];
+var groups=[];F.forEach(function(f){if(groups.indexOf(f.grp)<0)groups.push(f.grp)});
+var h='<p class="fl-intro">Признак, что проверить, куда ставить перемычку. Где есть кнопка «Показать на схеме», на принципиальной схеме видно, куда доходит ток при неисправности и как он идёт в обход через перемычку.</p>';
+groups.forEach(function(g){
+  h+='<h2 class="fl-g">'+g+'</h2>';
+  F.filter(function(f){return f.grp===g}).forEach(function(f){
+    h+='<details class="fl" id="fl_'+f.id+'"><summary><span class="fl-t">'+f.title+'</span>'+(f.scheme?'<span class="fl-tag">схема</span>':'')+(f.photos?'<span class="fl-tag">фото</span>':'')+'</summary><div class="fl-b">';
+    if(f.sign) h+='<div class="fl-row"><div class="fl-l">Признак</div><div>'+f.sign+'</div></div>';
+    if(f.checks) h+='<div class="fl-row"><div class="fl-l">Проверить</div><ol>'+f.checks.map(function(c){return '<li>'+c+'</li>'}).join('')+'</ol></div>';
+    if(f.jumper) h+='<div class="fl-j"><b>Перемычка.</b> '+f.jumper+'</div>';
+    if(f.warn) h+='<div class="fl-w"><b>Внимание!</b> '+f.warn+'</div>';
+    if(f.scheme) h+='<button type="button" class="btnp fl-show" data-id="'+f.id+'">Показать на схеме →</button>';
+    if(f.photos) h+='<div class="fl-ph">'+f.photos.map(function(p){return '<figure><button type="button" class="fl-img" data-src="img/'+p[0]+'" data-cap="'+p[1]+'"><img loading="lazy" src="img/'+p[0]+'" alt="'+p[1]+'"></button><figcaption>'+p[1]+'</figcaption></figure>'}).join('')+'</div>';
+    h+='<div class="fl-src">Источник: '+f.src+'</div></div></details>';
+  });
+});
+h+='<div class="fl-lb" id="fl_lb" hidden><button type="button" class="fl-x" aria-label="Закрыть">✕</button><img id="fl_lbi" alt=""><div id="fl_lbc"></div></div>';
+root.innerHTML=h;
+root.addEventListener('click',function(e){
+  var b=e.target.closest('.fl-show');
+  if(b){ if(typeof showTab==='function')showTab('p'); if(window.__pkFault)window.__pkFault(b.getAttribute('data-id')); return }
+  var im=e.target.closest('.fl-img');
+  if(im){ var lb=document.getElementById('fl_lb'); document.getElementById('fl_lbi').src=im.getAttribute('data-src'); document.getElementById('fl_lbc').textContent=im.getAttribute('data-cap'); lb.hidden=false; return }
+  if(e.target.closest('.fl-lb')){ document.getElementById('fl_lb').hidden=true }
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var lb=document.getElementById('fl_lb');if(lb&&!lb.hidden)lb.hidden=true}});
 })();
 
 </script>
