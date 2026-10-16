@@ -189,6 +189,12 @@ h1{font-size:20px}
 html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
 #vp.pk-isfull .info{position:fixed;left:12px;right:12px;bottom:12px;z-index:52}
 @media (max-width:640px){.tabs{flex-wrap:wrap;overflow:visible;row-gap:2px}.tabs .tb{padding:8px 10px}}
+
+.pk-w.pk-on.pk-new{stroke:#4C9BEA;stroke-dasharray:7 4}
+.pk-w.pk-nx{stroke:#9C95F0;stroke-width:2.6;stroke-dasharray:1 6;stroke-linecap:round}
+@media (prefers-reduced-motion:no-preference){.pk-w.pk-nx{animation:pkfd .7s linear infinite}.pk-w.pk-on.pk-new{animation:pkfd2 1s linear infinite}}
+@keyframes pkfd{to{stroke-dashoffset:-7}}
+@keyframes pkfd2{to{stroke-dashoffset:-11}}
 </style>
 </head>
 <body>
@@ -577,9 +583,9 @@ root.innerHTML=
 '<div class="prog" id="pk_prog" role="progressbar" aria-label="Шаг"><div class="plabel" id="pk_plabel"></div><div class="ptrack"><div class="pfill" id="pk_pfill"></div></div></div>'+
 '<button id="pk_next" class="btnp">Далее →</button></div></div>'+
 '<div class="legend pk-legend">'+
+'<span><i style="border-top:2.5px dashed #4C9BEA"></i>ток пошёл на этом шаге, контакт переключился</span>'+
+'<span><i style="border-top:2.5px dotted #9C95F0"></i>следующий шаг</span>'+
 '<span><i style="border-top:2.5px solid #2BB386"></i>ток есть</span>'+
-'<span><i style="border-top:2.5px dashed #4C9BEA"></i>переключилось на этом шаге</span>'+
-'<span><i style="border-top:2.5px dotted #9C95F0"></i>катушка получила питание, сработает на следующем шаге</span>'+
 '<span><i style="border-top:2.5px solid #EF9F27"></i>цепь подготовлена: напряжение дошло до разомкнутого контакта</span>'+
 '<span><i style="border-top:1.5px solid #5d6570"></i>тока нет</span></div>'+
 '<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><button id="pk_full" type="button" class="pk-fbtn">⛶ Во весь экран</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
@@ -909,9 +915,14 @@ var C=window.PK_CARDS||[];
 /* ================= Отрисовка шага ================= */
 var cur=0, sel=null;
 function devText(d){return '<span class="pl">'+d+'</span>'}
+function wasOn(s,g){ var on=!!s.cur[g.net];
+  if(on&&g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) on=s.live.length>0;
+    else on=s.live.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
+  return on; }
 function draw(){
   var fr=FR[cur], prev=FR[cur-1], nx=FR[cur+1], s=fr.s;
   var prevS=prev?prev.s:null;
+  var nxS=nx?nx.s:null;
   /* оранжевое: новая подготовленная цепь, которая упирается в разомкнутый контакт аппарата (не тумблера и не кнопки) */
   var prep={}, waitEl={};
   if(prevS&&cur>0){
@@ -923,10 +934,9 @@ function draw(){
   }
   SEG.forEach(function(g){
     var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
-    var on=!!s.cur[g.net];
-    if(on&&g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) on=s.live.length>0;
-      else on=s.live.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
-    if(on) c+=' pk-on';
+    var on=wasOn(s,g);
+    if(on){ c+=' pk-on'; if(prevS&&!wasOn(prevS,g)) c+=' pk-new'; }
+    else if(nxS&&wasOn(nxS,g)) c+=' pk-nx';
     else if(prep[g.net]) c+=' pk-prep';
     g.el.setAttribute('class',c);
   });
