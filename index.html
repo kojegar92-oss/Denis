@@ -142,12 +142,46 @@ h1{font-size:20px}
 .shint{display:block}
 .info{max-height:38vh;overflow:auto;font-size:14px;bottom:8px}
 }
+/* --- вкладка «Плакат ТЭМ18Д»: лист всегда тёмный --- */
+.pk-zoom{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 8px;font-size:12px;color:var(--text-secondary)}
+.pk-zoom button{padding:6px 12px}
+.pk-sheet{overflow:auto;-webkit-overflow-scrolling:touch;border-radius:10px;background:#14171c;border:1px solid #2a2f37;max-height:80vh}
+.pk-sheet svg{display:block}
+.pk-bg{fill:#14171c}
+.pk-w{stroke:#4f5662;stroke-width:1.7;stroke-linecap:round}
+.pk-w.pk-on{stroke:#2BB386;stroke-width:2.6}
+.pk-w.pk-prep{stroke:#EF9F27;stroke-width:2.3}
+.pk-t{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:10.5px;fill:#b9c0ca;font-style:italic}
+.pk-tp{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:9.5px;fill:#98a0ab}
+.pk-tn{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:12px;font-weight:600;fill:#eef1f5}
+.pk-cap{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:10.5px;fill:#8f97a3;font-style:italic}
+#pk_sv text{paint-order:stroke;stroke:#14171c;stroke-width:3px;stroke-linejoin:round}
+.pk-sym{fill:none;stroke:#a7afba;stroke-width:1.6;stroke-linecap:round}
+.pk-dash{stroke-dasharray:3 3}
+.pk-bl{stroke:#d5dae1;stroke-width:2.2;stroke-linecap:round}
+.pk-pin{fill:#d5dae1}
+.pk-nd{fill:#14171c;stroke:#8d95a1;stroke-width:1.4}
+.pk-jd{fill:#8d95a1}
+.pk-coil{fill:#1d2128;stroke:#a7afba;stroke-width:1.6}
+.pk-hit{fill:transparent}
+.pk-fr{fill:none;stroke:none}
+.pk-el{cursor:pointer;transition:opacity .2s}
+.pk-el.pk-act .pk-coil{fill:rgba(43,179,134,.28);stroke:#2BB386;stroke-width:2.2}
+.pk-el.pk-next .pk-coil{stroke:#9C95F0;stroke-width:2.2;stroke-dasharray:4 3}
+.pk-el.pk-con .pk-bl{stroke:#2BB386}
+.pk-el.pk-chg .pk-fr{fill:rgba(76,155,234,.16);stroke:#4C9BEA;stroke-width:1.5;stroke-dasharray:4 3}
+.pk-el.pk-chg.pk-act .pk-coil,.pk-el.pk-chg .pk-coil{stroke-dasharray:5 3}
+.pk-el.pk-wait .pk-fr{stroke:#EF9F27;stroke-width:1.6}
+.pk-el.pk-sel .pk-hit{fill:rgba(255,255,255,.08);stroke:#fff;stroke-width:1.5}
+.pk-el.pk-dim{opacity:.35}
+@media (prefers-reduced-motion:no-preference){.pk-w{transition:stroke .25s}.pk-bl{transition:all .25s}}
+.pk-el.pk-chg:not(.pk-act) .pk-coil{stroke:#4C9BEA;stroke-width:2.2}
 </style>
 </head>
 <body>
 <main>
 <h1>Пуск дизеля ТЭМ18ДМ</h1>
-<div class="tabs"><button class="tb on" data-t="d">Схема</button><button class="tb" data-t="k">Последовательность</button></div>
+<div class="tabs"><button class="tb on" data-t="d">Схема</button><button class="tb" data-t="k">Последовательность</button><button class="tb" data-t="p">Плакат ТЭМ18Д</button></div>
 <div id="vd">
 <div class="top">
 <div class="card">
@@ -177,6 +211,7 @@ h1{font-size:20px}
 <div class="shint">Схема шире экрана: листайте вправо</div>
 <div id="kinfo" class="info"></div>
 </div>
+<div id="vp" hidden></div>
 </main>
 <script>
 var T=function(){return true};
@@ -418,13 +453,521 @@ else{var q=INFO[KB[ksel][0]];ki.innerHTML='<div style="font-weight:500;margin:0 
 function kpick(e){var t=e.target.closest?e.target.closest('[data-i]'):null;var i=t?+t.getAttribute('data-i'):-1;ksel=(i>=0&&i!==ksel)?i:-1;kdraw()}
 document.getElementById('ksv').addEventListener('click',kpick);
 document.getElementById('ksv').addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute&&e.target.getAttribute('data-i')!==null){e.preventDefault();kpick(e)}});
-function showTab(t){curTab=t;document.getElementById('vd').hidden=t!=='d';document.getElementById('vk').hidden=t!=='k';Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.className='tb'+(b.getAttribute('data-t')===t?' on':'')})}
+function showTab(t){curTab=t;document.getElementById('vd').hidden=t!=='d';document.getElementById('vk').hidden=t!=='k';document.getElementById('vp').hidden=t!=='p';if(t==='p'&&window.__pkShow)window.__pkShow();Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.className='tb'+(b.getAttribute('data-t')===t?' on':'')})}
 Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){b.onclick=function(){showTab(b.getAttribute('data-t'))}});
 document.addEventListener('keydown',function(e){
 if(e.key==='Escape'){if(curTab==='d'&&sel){sel=null;draw()}if(curTab==='k'&&ksel>=0){ksel=-1;kdraw()}}
-if(curTab==='d'){if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()}});
+if(curTab==='d'){if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()}if(curTab==='p'){var bb=document.getElementById(e.key==='ArrowRight'?'pk_next':e.key==='ArrowLeft'?'pk_prev':'');if(bb)bb.click()}});
 kdraw();
 draw();
+</script>
+<script>
+/* Тексты шагов для вкладки «Плакат ТЭМ18Д». Порядок шагов рассчитывается по схеме; тексты — к каждому шагу. */
+window.PK_INFO={
+'РУ12':'реле подготовки пуска',
+'КТН':'контактор топливного насоса',
+'РУ7':'промежуточное реле',
+'РВ2':'реле времени: контакт замыкается сразу, размыкается с выдержкой',
+'РУ28':'промежуточное реле',
+'КМН':'контактор маслопрокачивающего насоса',
+'РВ3':'реле времени прокачки масла',
+'РУ29':'промежуточное реле',
+'РУ5':'реле включения пусковых контакторов',
+'РВ5':'реле времени проворота',
+'РУ30':'промежуточное реле',
+'Д1':'пусковой контактор',
+'Д2':'пусковой контактор',
+'БМ':'блок-магнит',
+'РУ4':'реле завершения пуска',
+'КУ17':'контактор возбуждения, признак того, что дизель работает',
+'РДМ':'реле давления масла',
+'Л35':'лампа «Дизель 2-го тепловоза»'
+};
+(function(){
+function p(d){return '<span class="pl">'+d+'</span>'}
+window.PK_CARDS=[
+{tag:'Исходное состояние',title:'Всё выключено',
+ why:'Цепи управления под напряжением: «+» есть на проводах 804 и 1503. Тумблер '+p('В28')+' «Топливный насос» в рабочем положении (провод 287). Тумблер '+p('В27')+' выключен.',
+ next:'Машинист включает тумблер '+p('В27')+' «Пуск-остановка дизеля».'},
+{tag:'1. Запуск и топливо',title:'Включён тумблер '+p('В27'),
+ why:'Через пары 7-8 и 5-6 тумблера ток идёт: 11/8 → 280 → 244 → '+p('В27')+' → 705 → 11/6 → кнопки «Стоп» '+p('2КО')+' и '+p('1КО')+' → 6/9 → '+p('ПЧТ')+' → 692 → катушка '+p('РУ12')+'.',
+ next:'Через пары 3-4 и 1-2 напряжение по проводам 337 → '+p('БУК')+' → 2782 → 2783 → 561 дошло до разомкнутого контакта '+p('РУ12')+' (оранжевая цепь). '+p('РУ12')+' сработает на следующем шаге.'},
+{tag:'1. Запуск и топливо',title:p('РУ12')+' включилось',
+ why:'Контакт '+p('РУ12')+' 734–733 замкнулся: '+p('РУ12')+' встало на самоподхват от 11/8 через 800 → 805 → 734 → 733 → 706 → 11/6. Контакт '+p('РУ12')+' 561–575 замкнулся: ток идёт 575 → 577 → 1563 → 583 → 581 → катушка '+p('КТН')+'.',
+ next:'Провод 1563 подаёт питание на вывод 1 реле времени '+p('РВ2')+' и подводит напряжение к контактам '+p('РУ7')+', '+p('РУ4')+', '+p('РУ30')+' и '+p('Д1')+'. '+p('КТН')+' сработает на следующем шаге.'},
+{tag:'1. Запуск и топливо',title:p('КТН')+' включился — работает топливный насос',
+ why:'Блок-контакт '+p('КТН')+' 148–150 замкнулся: «+» от тумблера '+p('В28')+' (провод 287) прошёл на провод 150 и дальше: 885 → 453 → размыкающий '+p('РУ4')+' → 248 → '+p('Ш2')+' → 242 → 214 → катушка '+p('РУ7')+'.',
+ next:'Размыкающий контакт '+p('КТН')+' 250–2781 разомкнулся: провернуть вал кнопкой '+p('КП')+' при работающем топливном насосе нельзя. Напряжение дошло до разомкнутых контактов '+p('РВ2')+', '+p('РУ28')+', '+p('РУ5')+' и '+p('РВ5')+'.'},
+{tag:'1. Запуск и топливо',title:p('РУ7')+' включилось',
+ why:'Контакт '+p('РУ7')+' замкнулся: ток идёт 1563 → 1717 → 1564 → вывод 3 реле времени '+p('РВ2')+'.',
+ next:p('РВ2')+' сработает на следующем шаге.'},
+{tag:'2. Прокачка масла',title:p('РВ2')+' включилось',
+ why:'Контакт '+p('РВ2')+' 883–1724 замкнулся сразу, без выдержки: ток идёт 150 → размыкающий '+p('КУ17')+' → 1732 → 883 → '+p('РВ2')+' → 1724 → 1725 → катушка '+p('РУ28')+'.',
+ next:'Напряжение по проводу 1512 дошло до разомкнутого контакта '+p('РВ3')+'. '+p('РУ28')+' сработает на следующем шаге.'},
+{tag:'2. Прокачка масла',title:p('РУ28')+' включилось',
+ why:'Контакт '+p('РУ28')+' 417–296 замкнулся → катушка '+p('КМН')+'. Контакт '+p('РУ28')+' 1517–1723 замкнулся → 1516 → катушка '+p('РВ3')+'.',
+ next:'По проводу 449 напряжение дошло до разомкнутого контакта '+p('РУ29')+'. '+p('КМН')+' и '+p('РВ3')+' сработают на следующем шаге.'},
+{tag:'2. Прокачка масла',title:p('КМН')+' и '+p('РВ3')+' включились — идёт прокачка масла',
+ why:p('КМН')+' включает маслопрокачивающий насос: масло подаётся в дизель до проворота. '+p('РВ3')+' начинает отсчёт времени прокачки.',
+ next:'Когда выдержка '+p('РВ3')+' закончится, его контакт 1А–2А замкнётся.'},
+{tag:'2. Прокачка масла',title:p('РВ3')+' отсчитало выдержку',
+ why:'Контакт '+p('РВ3')+' 1А–2А замкнулся: ток идёт 1724 → 1512 → '+p('РВ3')+' → 1511 → 1726 → катушка '+p('РУ29')+'.',
+ next:p('РУ29')+' сработает на следующем шаге.'},
+{tag:'3. Проворот и подача топлива',title:p('РУ29')+' включилось',
+ why:'Контакт '+p('РУ29')+' 449–603 замкнулся → катушка '+p('РУ5')+'.',
+ next:p('РУ5')+' сработает на следующем шаге.'},
+{tag:'3. Проворот и подача топлива',title:p('РУ5')+' включилось',
+ why:'Контакт '+p('РУ5')+' 454–425 замкнулся: ток идёт 454 → 425 → размыкающий '+p('КВ')+' → 235 → 239 → блокировка '+p('ВПУ')+' → 243 → 251 → катушки '+p('Д1')+' и '+p('Д2')+'. Контакт '+p('РУ5')+' 885–165 замкнулся → 1728 → катушка '+p('РВ5')+'.',
+ next:p('Д1')+', '+p('Д2')+' и '+p('РВ5')+' сработают на следующем шаге.'},
+{tag:'3. Проворот и подача топлива',title:p('Д1')+' и '+p('Д2')+' включились — генератор проворачивает вал',
+ why:'Силовые контакты '+p('Д1')+' и '+p('Д2')+' подключают тяговый генератор к батарее: генератор работает в режиме электродвигателя и проворачивает коленчатый вал. '+p('РВ5')+' начинает отсчёт времени проворота.',
+ next:'Блок-контакт '+p('Д1')+' 577–133 замкнулся: ток идёт 133 → 5/6 → 144 → 145 → 12Д → катушка '+p('БМ')+'. Блок-контакт '+p('Д2')+' 111–112 разомкнулся.'},
+{tag:'3. Проворот и подача топлива',title:p('БМ')+' включился — подаётся топливо',
+ why:'Блок-магнит '+p('БМ')+' разрешает подачу топлива в цилиндры. Вал проворачивается, топливо подаётся — дизель начинает работать.',
+ next:'Когда дизель запустится, в нём вырастет давление масла и замкнётся '+p('РДМ')+'.'},
+{tag:'4. Дизель запустился',title:'Давление масла в норме — '+p('РДМ')+' замкнулось',
+ why:'Контакт '+p('РДМ')+' 1Д–2Д замкнулся: ток идёт 133 → 144 → 145 → 12Д → 126 → '+p('РДМ')+' → 125 → 560 → 580 → катушка '+p('РУ4')+'.',
+ next:p('РУ4')+' (реле завершения пуска) сработает на следующем шаге. Если '+p('РДМ')+' не замкнётся, '+p('РУ4')+' включится по времени: через '+p('РВ5')+' и '+p('РУ30')+'.'},
+{tag:'4. Дизель запустился',title:p('РУ4')+' включилось',
+ why:'Контакт '+p('РУ4')+' 1563–560 замкнулся: '+p('РУ4')+' встало на самоподхват (580), а '+p('БМ')+' теперь получает питание через '+p('РДМ')+' без '+p('Д1')+'. Размыкающий контакт '+p('РУ4')+' 453–417 разомкнулся.',
+ next:'Обесточены провод 248 (катушка '+p('РУ7')+') и провод 296 (катушка '+p('КМН')+'). Они отключатся на следующем шаге.'},
+{tag:'4. Дизель запустился',title:p('РУ7')+' и '+p('КМН')+' отключились',
+ why:'Маслопрокачивающий насос остановлен: дизель сам создаёт давление масла. Контакт '+p('РУ7')+' разомкнулся — вывод 3 реле '+p('РВ2')+' обесточен.',
+ next:'Катушка '+p('РВ2')+' отключится на следующем шаге.'},
+{tag:'4. Дизель запустился',title:'Катушка '+p('РВ2')+' отключилась',
+ why:'Контакт '+p('РВ2')+' 883–1724 пока остаётся замкнутым: он размыкается с выдержкой времени. Проворот ещё продолжается.',
+ next:'Когда выдержка закончится, контакт '+p('РВ2')+' разомкнётся.'},
+{tag:'4. Дизель запустился',title:p('РВ2')+' отсчитало выдержку',
+ why:'Контакт '+p('РВ2')+' 883–1724 разомкнулся. Провода 1724, 1725 и 449 обесточены.',
+ next:p('РУ28')+', '+p('РВ3')+', '+p('РУ29')+' и '+p('РУ5')+' отключатся на следующем шаге.'},
+{tag:'4. Дизель запустился',title:p('РУ28')+', '+p('РВ3')+', '+p('РУ29')+', '+p('РУ5')+' отключились',
+ why:'Контакт '+p('РУ5')+' 454–425 разомкнулся — катушки '+p('Д1')+' и '+p('Д2')+' обесточены. Контакт '+p('РУ5')+' 885–165 разомкнулся — обесточено '+p('РВ5')+'.',
+ next:p('Д1')+', '+p('Д2')+' и '+p('РВ5')+' отключатся на следующем шаге.'},
+{tag:'4. Дизель запустился',title:p('Д1')+' и '+p('Д2')+' отключились — проворот закончен',
+ why:'Генератор отключён от батареи. Блок-контакт '+p('Д2')+' 111–112 замкнулся: ток идёт 1563 → '+p('РУ4')+' → 560 → '+p('РДМ')+' → 12Д → 145 → 144 → 5/6 → 133 → 111 → '+p('Д2')+' → 112 → катушка '+p('КУ17')+'.',
+ next:p('КУ17')+' сработает на следующем шаге.'},
+{tag:'4. Дизель запустился',title:p('КУ17')+' включился — пуск закончен',
+ why:'Дизель работает. Контакт '+p('КУ17')+' 1503–805 замкнулся. Размыкающие контакты '+p('КУ17')+' 150–1732 и 393–2592 разомкнулись: повторный пуск и ручное включение масляного насоса заблокированы.',
+ next:'Работают топливный насос ('+p('КТН')+') и блок-магнит ('+p('БМ')+'). '+p('КУ17')+' собирает цепь возбуждения возбудителя (на другом листе плаката).'}
+];
+})();
+
+/* ===== Вкладка «Плакат ТЭМ18Д»: схема пуска по плакату, ток рассчитывается по проводам ===== */
+(function(){
+var root=document.getElementById('vp'); if(!root) return;
+var NS='http://www.w3.org/2000/svg';
+
+/* ---------- разметка вкладки ---------- */
+root.innerHTML=
+'<div class="top"><div class="card"><div id="pk_tag" class="tag"></div><div id="pk_title" class="hd"></div><div id="pk_desc" class="desc"></div></div>'+
+'<div class="bar"><button id="pk_prev" class="btnp">← Назад</button>'+
+'<div class="prog" id="pk_prog" role="progressbar" aria-label="Шаг"><div class="plabel" id="pk_plabel"></div><div class="ptrack"><div class="pfill" id="pk_pfill"></div></div></div>'+
+'<button id="pk_next" class="btnp">Далее →</button></div></div>'+
+'<div class="legend pk-legend">'+
+'<span><i style="border-top:2.5px solid #2BB386"></i>ток есть</span>'+
+'<span><i style="border-top:2.5px dashed #4C9BEA"></i>переключилось на этом шаге</span>'+
+'<span><i style="border-top:2.5px dotted #9C95F0"></i>катушка получила питание, сработает на следующем шаге</span>'+
+'<span><i style="border-top:2.5px solid #EF9F27"></i>цепь подготовлена: напряжение дошло до разомкнутого контакта</span>'+
+'<span><i style="border-top:1.5px solid #5d6570"></i>тока нет</span></div>'+
+'<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
+'<div class="pk-sheet" id="pk_sheet"><svg id="pk_sv" xmlns="http://www.w3.org/2000/svg"></svg></div>'+
+'<div id="pk_info" class="info" hidden></div>';
+
+var sv=document.getElementById('pk_sv');
+var Y=function(i){return 40+i*44};
+var BUS=1230, CX=1100, W=1320, H=Y(29)+46;
+sv.setAttribute('viewBox','0 0 '+W+' '+H);
+
+var LW=[], SEG=[], EL=[], NODES=[], PLUS=[], MINUSPT=[];
+var layer=sv;
+function mk(tag,a,p){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);(p||layer).appendChild(e);return e}
+function tx(x,y,s,c,an,p){var t=mk('text',{x:x,y:y,'class':c||'pk-t','text-anchor':an||'middle'},p);t.textContent=s;return t}
+var gW=mk('g',{}), gE=mk('g',{}), gT=mk('g',{});
+
+/* провод: сегменты запоминаются для расчёта цепей */
+function wire(pts,col){
+  for(var i=0;i<pts.length-1;i++){
+    var a=pts[i],b=pts[i+1];
+    var l=mk('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],'class':'pk-w'},gW);
+    SEG.push({a:a,b:b,el:l,col:col||''});
+  }
+}
+function wl(x1,x2,y,s){if(s)tx((x1+x2)/2,y-4,s,'pk-t','middle',gT)}
+function vl(x,y1,y2,s,side){if(s)tx(x+(side==='l'?-4:4),(y1+y2)/2+3,s,'pk-t',side==='l'?'end':'start',gT)}
+function node(x,y,lab){NODES.push(mk('circle',{cx:x,cy:y,r:3.2,'class':'pk-nd'},gE)); if(lab)tx(x,y+15,lab,'pk-tp','middle',gT)}
+function jd(x,y){mk('circle',{cx:x,cy:y,r:2.6,'class':'pk-jd'},gE)}
+
+/* контакт: k — центр, концы k-13 и k+13 */
+function contact(x,y,o){
+  /* o: {s:'NO'|'NC', mark:'cup'|'dome'|'btn'|'mech', l, dev, inv, pins, info, rot} */
+  var g=mk('g',{'class':'pk-el','data-dev':o.dev||o.l},gE);
+  mk('rect',{x:x-19,y:y-25,width:38,height:38,'class':'pk-hit'},g);
+  var s=mk('g',{transform:'translate('+x+','+y+')'+(o.rot?' rotate(90)':'')},g);
+  var fr=mk('rect',{x:-17,y:-20,width:34,height:30,rx:5,'class':'pk-fr'},s);
+  mk('circle',{cx:-13,cy:0,r:2,'class':'pk-pin'},s); mk('circle',{cx:13,cy:0,r:2,'class':'pk-pin'},s);
+  if(o.s==='NC') mk('line',{x1:13,y1:-2,x2:13,y2:-12,'class':'pk-sym'},s);
+  var bl=mk('line',{x1:-13,y1:0,x2:13,y2:0,'class':'pk-bl'},s);
+  if(o.mark==='cup'||o.mark==='dome'){
+    mk('line',{x1:-3,y1:-6,x2:-3,y2:-15,'class':'pk-sym'},s); mk('line',{x1:4,y1:-6,x2:4,y2:-15,'class':'pk-sym'},s);
+    mk('path',{d:o.mark==='cup'?'M-7,-15 A 7.5 6 0 0 0 8,-15':'M-7,-15 A 7.5 6 0 0 1 8,-15','class':'pk-sym'},s);
+  }
+  if(o.mark==='btn'){mk('line',{x1:0,y1:-6,x2:0,y2:-17,'class':'pk-sym'},s);mk('path',{d:'M-6,-13 L-6,-17 L6,-17 L6,-13','class':'pk-sym'},s)}
+  if(o.mark==='mech'){mk('line',{x1:0,y1:-6,x2:0,y2:-18,'class':'pk-sym pk-dash'},s)}
+  var up=(o.mark?23:17);
+  if(o.rot) tx(x-12,y+4,o.l,'pk-tn','end',g); else tx(x,y-up,o.l,'pk-tn','middle',g);
+  if(o.pins&&!o.rot){tx(x-15,y+15,o.pins[0],'pk-tp','middle',g);tx(x+19,y+15,o.pins[1],'pk-tp','middle',g)}
+  var p1=o.rot?[x,y-13]:[x-13,y], p2=o.rot?[x,y+13]:[x+13,y];
+  var e={kind:'sw',dev:o.dev||o.l,label:o.l,s:o.s,p1:p1,p2:p2,g:g,bl:bl,fr:fr,info:o.info||'',key:o.key,fixed:o.fixed,mark:o.mark};
+  EL.push(e); return e;
+}
+function conn(x,y,c,p,vert){ /* разъём — сквозной провод */
+  if(vert){wire([[x,y-5],[x,y+7]]);
+    mk('polyline',{points:(x-6)+','+(y-5)+' '+x+','+y+' '+(x+6)+','+(y-5),'class':'pk-sym'},gE);
+    mk('polyline',{points:(x-6)+','+(y+1)+' '+x+','+(y+6)+' '+(x+6)+','+(y+1),'class':'pk-sym'},gE);
+    tx(x-9,y+2,c,'pk-tp','end',gT);tx(x+9,y+8,p,'pk-tp','start',gT);return}
+  wire([[x-5,y],[x+7,y]]);
+  mk('polyline',{points:(x-5)+','+(y-6)+' '+x+','+y+' '+(x-5)+','+(y+6),'class':'pk-sym'},gE);
+  mk('polyline',{points:(x+1)+','+(y-6)+' '+(x+6)+','+y+' '+(x+1)+','+(y+6),'class':'pk-sym'},gE);
+  tx(x+1,y-9,c,'pk-tp','middle',gT);tx(x+4,y+16,p,'pk-tp','middle',gT);
+}
+function coil(x,y,l,pins,h){
+  h=h||30;
+  var g=mk('g',{'class':'pk-el','data-dev':l},gE);
+  mk('rect',{x:x-24,y:y-h/2-8,width:48,height:h+16,'class':'pk-hit'},g);
+  var r=mk('rect',{x:x-9,y:y-h/2,width:18,height:h,'class':'pk-coil'},g);
+  tx(x-13,y-h/2-4,l,'pk-tn','end',g);
+  if(pins){tx(x-16,y+h/2-1,pins[0],'pk-tp','end',g);tx(x+16,y+h/2-1,pins[1],'pk-tp','start',g)}
+  var e={kind:'coil',dev:l,label:l,p1:[x-9,y],p2:[x+9,y],g:g,r:r};
+  EL.push(e); return e;
+}
+/* ряд: токены слева направо */
+function row(y,T,col){
+  var px=null,lab=null;
+  function seg(x2){ if(px!==null&&x2>px){wire([[px,y],[x2,y]],col);wl(px,x2,y,lab)} lab=null }
+  for(var i=0;i<T.length;i++){var t=T[i];
+    if(typeof t==='string'){lab=t;continue}
+    if(t.x!==undefined){ seg(t.x-5);
+      if(t.c==='РМС'){ /* штепсельный разъём межтепловозного соединения: в одиночной работе разомкнут */
+        var g=mk('g',{'class':'pk-el','data-dev':'РМС'},gE);
+        mk('rect',{x:t.x-12,y:y-20,width:26,height:30,'class':'pk-hit'},g);
+        mk('polyline',{points:(t.x-5)+','+(y-6)+' '+t.x+','+y+' '+(t.x-5)+','+(y+6),'class':'pk-sym'},g);
+        mk('polyline',{points:(t.x+1)+','+(y-6)+' '+(t.x+6)+','+y+' '+(t.x+1)+','+(y+6),'class':'pk-sym'},g);
+        tx(t.x+1,y-9,'РМС','pk-tp','middle',g);tx(t.x+4,y+16,t.p,'pk-tp','middle',g);
+        EL.push({kind:'sw',dev:'РМС',label:'РМС',p1:[t.x-5,y],p2:[t.x+7,y],g:g,fixed:false,info:'РМС — розетка межтепловозного соединения. При работе одного тепловоза не подключена, цепь здесь разорвана.'});
+      } else conn(t.x,y,t.c,t.p);
+      px=t.x+7;continue}
+    if(t.p!==undefined){seg(t.p);px=t.p;continue}
+    if(t.n!==undefined){seg(t.n);px=t.n;node(t.n,y,t.t);continue}
+    if(t.j!==undefined){seg(t.j);px=t.j;jd(t.j,y);continue}
+    if(t.k!==undefined){seg(t.k-13);contact(t.k,y,t);px=t.k+13;continue}
+    if(t.coil!==undefined){seg(t.coil-9);coil(t.coil,y,t.l,t.pins);px=t.coil+9;continue}
+    if(t.lamp!==undefined){seg(t.lamp-8);
+      var lg=mk('g',{'class':'pk-el','data-dev':t.l},gE);
+      var lc=mk('circle',{cx:t.lamp,cy:y,r:8,'class':'pk-coil'},lg);
+      mk('line',{x1:t.lamp-5.6,y1:y-5.6,x2:t.lamp+5.6,y2:y+5.6,'class':'pk-sym'},lg);
+      mk('line',{x1:t.lamp-5.6,y1:y+5.6,x2:t.lamp+5.6,y2:y-5.6,'class':'pk-sym'},lg);
+      tx(t.lamp,y-13,t.l,'pk-tn','middle',lg);
+      EL.push({kind:'coil',dev:t.l,label:t.l,p1:[t.lamp-8,y],p2:[t.lamp+8,y],g:lg,r:lc,lamp:true});
+      px=t.lamp+8;continue}
+  }
+}
+function vw(x,y1,y2,lab,side,col){wire([[x,y1],[x,y2]],col);vl(x,y1,y2,lab,side)}
+function cap(x,y,s,an){tx(x,y,s,'pk-cap',an||'middle',gT)}
+function plus(x,y){PLUS.push([x,y]);tx(x-4,y+4,'+','pk-tn','end',gT)}
+/* тумблер: пары контактов от шины x=116 до x=170 */
+function tumbler(name,capt,ys,pins,keys){
+  var g=mk('g',{'class':'pk-el','data-dev':name},gE);
+  ys.forEach(function(y,i){
+    mk('rect',{x:110,y:y-9,width:66,height:18,'class':'pk-hit'},g);
+    mk('circle',{cx:116,cy:y,r:2.2,'class':'pk-pin'},g);
+    var bl=mk('line',{x1:122,y1:y,x2:160,y2:y,'class':'pk-bl'},g);
+    mk('line',{x1:116,y1:y,x2:122,y2:y,'class':'pk-sym'},g); mk('line',{x1:160,y1:y,x2:170,y2:y,'class':'pk-sym'},g);
+    tx(121,y-3,pins[i][0],'pk-tp','end',g); tx(164,y-3,pins[i][1],'pk-tp','start',g);
+    EL.push({kind:'sw',dev:name,label:name,s:'NO',p1:[116,y],p2:[170,y],g:g,bl:bl,key:keys[i],tum:true,info:capt});
+  });
+  mk('line',{x1:141,y1:ys[0]-10,x2:141,y2:ys[ys.length-1]+4,'class':'pk-sym pk-dash'},g);
+  tx(141,ys[0]-13,name,'pk-tn','middle',g);
+}
+
+/* ================= СХЕМА (по плакату ТЭМ18Д) ================= */
+mk('rect',{x:0,y:0,width:W,height:H,'class':'pk-bg'},gW);
+wire([[BUS,Y(5)],[BUS,Y(29)]],'k'); MINUSPT.push([BUS,Y(5)]);
+tx(BUS+6,Y(5)-8,'4/6, 4/7','pk-tp','start',gT); tx(BUS+8,Y(15),'минус','pk-cap','start',gT);
+
+plus(20,Y(0)); wire([[20,Y(0)],[285,Y(0)],[285,Y(1)]]); wl(20,285,Y(0),'804');
+plus(20,Y(1));
+row(Y(1),[{p:20},'1503',{n:62},{k:90,s:'NO',l:'КУ17'},{n:111},'805',{x:217,c:'Р13',p:'7'},'800',{n:285}]);
+tx(292,Y(1)+4,'11/8','pk-tp','start',gT);
+vw(111,Y(1),Y(2),'734','l');
+row(Y(2),[{p:111},{k:140,s:'NO',l:'РУ12'},{n:166},'733',{x:206,c:'Р4',p:'20'},{p:241}]);
+vw(241,Y(2),Y(5),'706','r');
+row(Y(3),[{p:64},'247',{k:130,s:'NO',mark:'btn',l:'КП',info:'КП «Проворот вала дизеля» — кнопка. При пуске не нажимается.'},{n:166},'246',{x:214,c:'Р8',p:'24'},'280',{p:285}]);
+wire([[285,Y(3)],[285,Y(1)]]);
+cap(178,Y(3)+34,'Проворот вала дизеля','start');
+vw(64,Y(3),Y(17),'247','l');
+wire([[166,Y(3)],[166,Y(3)+16],[116,Y(3)+16],[116,Y(13.5)]]);
+tx(170,Y(3)+12,'244','pk-t','start',gT); tx(112,Y(8.2),'630','pk-t','end',gT); tx(112,Y(12.4),'811','pk-t','end',gT);
+
+var b27=[Y(5),Y(5)+12,Y(5)+24,Y(5)+36];
+tumbler('В27','«Пуск-остановка дизеля» — тумблер. При пуске включён: замкнуты все четыре пары контактов.',b27,[['7','8'],['5','6'],['3','4'],['1','2']],['В27','В27','В27','В27']);
+wire([[170,b27[0]],[170,b27[1]]]); wire([[170,b27[2]],[170,b27[3]]]);
+cap(125,Y(6.35),'Пуск-остановка','start'); cap(125,Y(6.35)+12,'дизеля','start');
+wire([[170,b27[3]],[238,b27[3]],[238,Y(7.6)-13]]); wl(176,238,b27[3],'337');
+contact(238,Y(7.6),{s:'NO',mark:'mech',l:'БУК',rot:true,dev:'БУК',info:'БУК — блокировка крана машиниста усл. №367. Замкнута, когда кран в нужном положении.'});
+wire([[238,Y(7.6)+13],[238,Y(15.25)-5]]); vl(238,Y(10.5),Y(12.5),'2782','r');
+cap(246,Y(8.6),'Блокировка','start'); cap(246,Y(8.6)+12,'усл. №367','start');
+conn(238,Y(15.25),'Р6','20',true);
+wire([[238,Y(15.25)+7],[238,Y(16)]]);
+
+row(Y(5),[{p:170},'705',{x:205,c:'Р8',p:'25'},'711',{n:241},'894',{x:285,c:'ШР2',p:'1'},'01',{k:330,s:'NC',mark:'btn',l:'2КО',info:'2КО «Стоп дизеля» на втором пульте — кнопка с размыкающим контактом.'},'02',{x:385,c:'ШР2',p:'2'},'895',{n:432},'896',{x:480,c:'ШР1',p:'2'},'02',{k:525,s:'NC',mark:'btn',l:'1КО',info:'1КО «Стоп дизеля» на первом пульте — кнопка с размыкающим контактом.'},'01',{x:575,c:'ШР1',p:'1'},'897',{x:612,c:'Р5',p:'29'},'851',{n:663},'691',{k:830,s:'NC',l:'ПЧТ',pins:['2','1'],info:'ПЧТ — переключатель числа тепловозов. Стоит в положении «один тепловоз», контакт замкнут.'},'692',{n:980},{coil:CX,l:'РУ12'},'704',{p:BUS}]);
+tx(241,Y(5)+15,'11/6','pk-tp','middle',gT); tx(432,Y(5)+15,'15/3','pk-tp','middle',gT); tx(663,Y(5)+15,'6/9','pk-tp','middle',gT);
+cap(430,Y(5)-30,'Стоп дизеля');
+vw(663,Y(5),Y(3),'690','l');
+row(Y(3),[{p:663},{x:700,c:'РМС',p:'32/31'},'535',{n:768},'554',{x:813,c:'Р6',p:'4'},'536',{k:873,s:'NO',l:'В32',pins:['1','2'],info:'В32 «Стоп дизеля 2-го тепловоза». При работе одного тепловоза не используется.'},'544',{x:929,c:'Р6',p:'12'},'555',{n:993},'545',{x:1060,c:'РМС',p:'14/33'},'694',{n:1126}]);
+tx(768,Y(3)+15,'6/4','pk-tp','middle',gT); tx(993,Y(3)+15,'6/7','pk-tp','middle',gT); tx(1126,Y(3)+15,'6/6','pk-tp','middle',gT);
+cap(873,Y(3)-30,'Стоп дизеля 2-го тепловоза');
+wire([[1126,Y(3)],[1126,Y(4)],[980,Y(4)],[980,Y(5)]]); wl(980,1126,Y(4),'703');
+
+row(Y(6),[{p:263},{x:368,c:'Р6',p:'24'},'596',{k:706,s:'NC',l:'РУ4'},{n:736},'581',{coil:CX,l:'КТН'},'127',{p:BUS}]);
+wire([[736,Y(6)],[736,Y(7)],[410,Y(7)],[410,Y(22)]]); wl(410,736,Y(7),'583');
+wire([[750,Y(9)],[750,Y(7)],[1000,Y(7)],[1000,Y(8)]]); wl(750,1000,Y(7),'1725');
+row(Y(8),[{n:1000},{coil:CX,l:'РУ28'},'497',{p:BUS}]);
+wire([[784,Y(14)],[784,Y(8)],[1000,Y(8)]]); wl(784,1000,Y(8),'449'); jd(815,Y(8));
+
+var b28=[Y(9.5),Y(9.5)+12,Y(9.5)+24,Y(9.5)+36];
+tumbler('В28','«Топливный насос» — тумблер. При пуске в рабочем положении: замкнуты пары 5-6 и 7-8 (провод 287).',b28,[['1','2'],['3','4'],['5','6'],['7','8']],['В28м','В28м','В28р','В28р']);
+wire([[170,b28[0]],[170,b28[1]]]); wire([[170,b28[2]],[170,b28[3]]]);
+cap(125,Y(10.5)+18,'Топливный','start'); cap(125,Y(10.5)+30,'насос','start');
+wire([[170,b28[0]],[263,b28[0]],[263,Y(6)]]); wl(176,236,b28[0],'359');
+wire([[170,b28[2]],[304,b28[2]],[304,Y(9)]]); wl(250,304,b28[2],'287');
+
+row(Y(9),[{p:304},{x:331,c:'Р6',p:'13'},'148',{k:455,s:'NO',l:'КТН'},{n:490},'150',{k:537,s:'NC',l:'КУ17'},'1732',{x:600,c:'Р15',p:'20'},'883',{k:660,s:'NO',mark:'cup',l:'РВ2',key:'РВ2к',info:'РВ2 — реле времени. Контакт замыкается сразу, а размыкается с выдержкой времени.'},{n:690},'1724',{x:722,c:'Р15',p:'16'},{p:750}]);
+vw(815,Y(8),Y(9),'1517','r');
+row(Y(9),[{p:815},{k:868,s:'NO',l:'РУ28'},'1723',{x:934,c:'Р15',p:'17'},'1516',{coil:CX,l:'РВ3',pins:['1Б','2Б']},'1519',{p:BUS}]);
+wire([[490,Y(9)],[490,Y(15)],[511,Y(15)]]); vl(490,Y(13),Y(15),'885','l');
+vw(511,Y(15),Y(10),'453','r');
+row(Y(10),[{p:511},{k:540,s:'NC',l:'РУ4'},{n:640},'417',{k:738,s:'NO',l:'РУ28'},'296',{p:980}]);
+wire([[980,Y(10)],[980,Y(12)]]); jd(980,Y(11));
+row(Y(11),[{p:980},{coil:CX,l:'КМН'},'167',{p:BUS}]);
+tumbler('В4','«Масляный насос» — тумблер ручного включения. При пуске выключен.',[Y(13.5)],[['1','2']],['В4']);
+cap(125,Y(13.5)+20,'Масляный насос','start');
+wire([[170,Y(13.5)],[335,Y(13.5)],[335,Y(12)]]); wl(176,236,Y(13.5),'403');
+row(Y(12),[{p:335},{x:365,c:'Р6',p:'9'},'393',{k:611,s:'NC',l:'КУ17'},'2592',{p:980}]);
+wire([[690,Y(9)],[690,Y(13)]]);
+row(Y(13),[{p:690},'1512',{k:855,s:'NO',mark:'dome',l:'РВ3',key:'РВ3к',pins:['1А','2А'],info:'РВ3 — реле времени. Контакт замыкается с выдержкой времени после включения катушки.'},'1511',{x:919,c:'Р15',p:'18'},'1726',{coil:CX,l:'РУ29'},'1515',{p:BUS}]);
+row(Y(14),[{p:784},{k:830,s:'NO',l:'РУ29'},'603',{coil:CX,l:'РУ5'},'2773',{p:BUS}]);
+row(Y(15),[{n:511},{k:540,s:'NO',l:'РУ5'},'165',{x:818,c:'Р15',p:'19'},'1728',{coil:CX,l:'РВ5',pins:['1Б','2Б']},'418',{p:BUS}]);
+wire([[511,Y(15)],[511,Y(16)]]);
+row(Y(16),[{p:511},'1729',{x:596,c:'Р15',p:'28'},'1513',{k:746,s:'NO',mark:'dome',l:'РВ5',key:'РВ5к',pins:['1А','2А'],info:'РВ5 — реле времени. Контакт замыкается с выдержкой времени после включения катушки.'},'1514',{x:854,c:'Р15',p:'27'},'1727',{coil:CX,l:'РУ30'},'249',{p:BUS}]);
+row(Y(16),[{p:238},'2783',{k:327,s:'NC',l:'?',dev:'?',info:'Подпись этого контакта на плакате не читается (сгиб листа). При пуске он замкнут.'},'561',{k:440,s:'NO',l:'РУ12'},{p:470}]);
+vw(470,Y(16),Y(20)); vl(470,Y(16.2),Y(17),'575','r');
+row(Y(17),[{p:64},{x:97,c:'Р6',p:'11'},'250',{k:171,s:'NC',l:'КТН'},'2781',{k:251,s:'NC',l:'РУ16'},'261',{p:330}]);
+wire([[330,Y(17)],[330,Y(18)]]);
+plus(20,Y(18));
+row(Y(18),[{p:20},'454',{k:220,s:'NO',l:'РУ5'},'425',{n:330},{k:356,s:'NC',l:'КВ'},'235',{x:556,c:'Р9',p:'6'},'239',{n:665},{k:690,s:'NC',mark:'mech',l:'ВПУ',info:'ВПУ — блокировка валоповоротного устройства. Замкнута, когда валоповоротный механизм выведен.'},{n:715},'243',{x:835,c:'Р9',p:'9'},'251',{n:1000},{coil:CX,l:'Д1'},'254',{p:BUS}]);
+tx(665,Y(18)+15,'8Д','pk-tp','middle',gT); tx(715,Y(18)+15,'9Д','pk-tp','middle',gT);
+cap(690,Y(17)+4,'Валоповоротное устройство');
+vw(1000,Y(18),Y(19),'253','l');
+row(Y(19),[{p:1000},{coil:CX,l:'Д2'},'466',{p:BUS}]);
+row(Y(20),[{j:410},'577',{n:470},{k:497,s:'NO',l:'Д1'},{n:534},'133',{n:602},'203',{x:690,c:'РМС',p:'20/25'},'693',{n:765},'588',{x:843,c:'Р6',p:'14'},'556',{lamp:930,l:'Л35'},'589',{p:1290}]);
+tx(602,Y(20)+15,'5/6','pk-tp','middle',gT); tx(765,Y(20)+15,'6/5','pk-tp','middle',gT); tx(1294,Y(20)+4,'Кл.3','pk-tp','start',gT);
+cap(930,Y(19)+8,'Дизель 2-го тепловоза');
+wire([[602,Y(20)],[602,Y(21)]]);
+row(Y(21),[{p:602},'144',{x:792,c:'Р9',p:'28'},'145',{p:941}]);
+wire([[941,Y(21)],[941,Y(22)]]);
+row(Y(22),[{n:410},{k:440,s:'NO',l:'РУ4'},{n:465},'560',{x:570,c:'Р9',p:'29'},'125',{n:705},{k:732,s:'NO',mark:'mech',l:'РДМ',info:'РДМ — реле давления масла. Замыкается, когда давление масла в дизеле достигло нормы.'},{n:765},'126',{n:941},{coil:CX,l:'БМ'},{n:1135},'272',{x:1180,c:'Р9',p:'30'},'2472',{p:BUS}]);
+tx(705,Y(22)+15,'1Д','pk-tp','middle',gT); tx(765,Y(22)+15,'2Д','pk-tp','middle',gT); tx(941,Y(22)+15,'12Д','pk-tp','middle',gT); tx(1135,Y(22)+15,'13Д','pk-tp','middle',gT);
+cap(1100,Y(22)+30,'блок-магнит');
+wire([[465,Y(22)],[465,Y(23)]]);
+row(Y(23),[{p:465},'580',{p:1000}]);
+wire([[1000,Y(23)],[1000,Y(25)]]); jd(1000,Y(24));
+row(Y(24),[{p:1000},{coil:CX,l:'РУ4'},'407',{p:BUS}]);
+cap(1100,Y(24)+30,'реле завершения пуска');
+vw(410,Y(22),Y(25),'582','l');
+row(Y(25),[{p:410},{k:440,s:'NO',l:'РУ30'},'469',{p:1000}]);
+wire([[534,Y(20)],[534,Y(26)]],'k'); vl(534,Y(23.6),Y(24.6),'111','r');
+row(Y(26),[{p:534},{k:716,s:'NC',l:'Д2'},'112',{coil:CX,l:'КУ17'},'973',{p:BUS}],'k');
+/* синие цепи плаката, участвующие в пуске */
+wire([[640,Y(10)],[640,Y(27)]],'b'); vl(640,Y(25.3),Y(25.8),'248','r');
+row(Y(27),[{p:640},{k:700,s:'NC',l:'Ш2',pins:['10','9'],info:'Ш2 — контактор ослабления возбуждения. При пуске выключен, его размыкающий контакт замкнут.'},'242',{n:800},'214',{coil:CX,l:'РУ7'},'1566',{p:BUS}],'b');
+tx(800,Y(27)+15,'11','pk-tp','middle',gT);
+wire([[410,Y(22)],[380,Y(22)],[380,Y(29)]],'b'); vl(380,Y(26),Y(27),'1563','l');
+row(Y(28),[{p:380},'1565',{x:780,c:'Р15',p:'14'},'1718',{p:CX-9}],'b');
+row(Y(29),[{p:380},{k:470,s:'NO',l:'РУ7'},'1717',{x:780,c:'Р15',p:'15'},'1564',{p:CX-9}],'b');
+jd(380,Y(28));
+/* реле времени РВ2: вывод 1 — питание, вывод 3 — запуск, вывод 4 — минус */
+(function(){
+  var y1=Y(28),y3=Y(29),ym=(y1+y3)/2;
+  var g=mk('g',{'class':'pk-el','data-dev':'РВ2'},gE);
+  mk('rect',{x:CX-24,y:y1-20,width:48,height:y3-y1+40,'class':'pk-hit'},g);
+  var r=mk('rect',{x:CX-9,y:y1-12,width:18,height:y3-y1+24,'class':'pk-coil'},g);
+  tx(CX-13,y1-16,'РВ2','pk-tn','end',g); tx(CX-13,y1+14,'1','pk-tp','end',g); tx(CX-13,y3+14,'3','pk-tp','end',g); tx(CX+14,ym+14,'4','pk-tp','start',g);
+  EL.push({kind:'coil',dev:'РВ2',label:'РВ2',p1:[CX-9,y3],p2:[CX+9,ym],g:g,r:r});
+  EL.push({kind:'load',dev:'РВ2',p1:[CX-9,y1],p2:[CX+9,ym]});
+  wire([[CX+9,ym],[BUS,ym]],'b'); wl(CX+9,BUS,ym,'217 · 1722');
+})();
+
+
+/* ================= ЦЕПИ: объединение точек ================= */
+var key=function(p){return p[0]+','+p[1]};
+var par={};
+function f(a){while(par[a]!==a){par[a]=par[par[a]];a=par[a]}return a}
+function u(a,b){a=f(a);b=f(b);if(a!==b)par[a]=b}
+function add(p){var k=key(p);if(!(k in par))par[k]=k;return k}
+SEG.forEach(function(s){u(add(s.a),add(s.b))});
+var TP=[];SEG.forEach(function(s){TP.push(s.a,s.b)});EL.forEach(function(e){add(e.p1);add(e.p2);TP.push(e.p1,e.p2)});PLUS.forEach(function(p){add(p);TP.push(p)});MINUSPT.forEach(function(p){add(p)});
+function onSeg(p,s){var a=s.a,b=s.b;
+  if(a[0]===b[0]&&p[0]===a[0]) return p[1]>=Math.min(a[1],b[1])&&p[1]<=Math.max(a[1],b[1]);
+  if(a[1]===b[1]&&p[1]===a[1]) return p[0]>=Math.min(a[0],b[0])&&p[0]<=Math.max(a[0],b[0]);
+  return false}
+TP.forEach(function(p){SEG.forEach(function(s){if(onSeg(p,s))u(key(p),key(s.a))})});
+SEG.forEach(function(s){s.net=f(key(s.a))});
+EL.forEach(function(e){e.n1=f(key(e.p1));e.n2=f(key(e.p2))});
+var SRC=PLUS.map(function(p){return f(key(p))}), MIN=f(key(MINUSPT[0]));
+
+/* ================= Логика аппаратов ================= */
+function closed(e,st){
+  if(e.dev==='РМС') return false;
+  if(e.tum) return !!st[e.key];
+  var on;
+  if(e.key) on=!!st[e.key];
+  else if(e.dev==='БУК') on=true;
+  else on=!!st[e.dev];
+  return e.s==='NC'?!on:on;
+}
+function solve(st){
+  var sw=EL.filter(function(e){return e.kind==='sw'&&closed(e,st)});
+  var adj={};function ad(a,b,e){(adj[a]=adj[a]||[]).push([b,e])}
+  sw.forEach(function(e){ad(e.n1,e.n2,e);ad(e.n2,e.n1,e)});
+  function reach(starts){var seen={},q=starts.slice();q.forEach(function(n){seen[n]=1});while(q.length){var n=q.shift();(adj[n]||[]).forEach(function(x){if(!seen[x[0]]){seen[x[0]]=1;q.push(x[0])}})}return seen}
+  var P=reach(SRC), M=reach([MIN]);
+  var loads=EL.filter(function(e){return e.kind==='coil'||e.kind==='load'});
+  var pw={}, live=[];
+  loads.forEach(function(e){var ok=(P[e.n1]&&M[e.n2])||(P[e.n2]&&M[e.n1]);if(ok){live.push(e);if(e.kind==='coil')pw[e.dev]=true}});
+  /* ток: отсекаем тупиковые ветви */
+  function core(set,virt){
+    var deg={},E=[];
+    sw.forEach(function(e){if(set[e.n1]&&set[e.n2]&&e.n1!==e.n2)E.push(e)});
+    live.forEach(function(e){[e.n1,e.n2].forEach(function(n){if(set[n])deg[n]=(deg[n]||0)+1})});
+    virt.forEach(function(n){deg[n]=(deg[n]||0)+1});
+    E.forEach(function(e){deg[e.n1]=(deg[e.n1]||0)+1;deg[e.n2]=(deg[e.n2]||0)+1});
+    var alive={};Object.keys(set).forEach(function(n){alive[n]=1});
+    var ch=true;
+    while(ch){ch=false;Object.keys(alive).forEach(function(n){if((deg[n]||0)<=1){delete alive[n];ch=true;E.forEach(function(e){if(e._d)return;if(e.n1===n||e.n2===n){e._d=1;var o=e.n1===n?e.n2:e.n1;deg[o]--}})}})}
+    E.forEach(function(e){delete e._d});
+    return alive;
+  }
+  var cur={};
+  if(live.length){
+    var cp=core(P,SRC), cm=core(M,[MIN]);
+    Object.keys(cp).forEach(function(n){cur[n]=1});Object.keys(cm).forEach(function(n){cur[n]=1});
+  }
+  return {P:P,M:M,pw:pw,cur:cur,live:live,sw:sw};
+}
+
+/* ================= Последовательность пуска (рассчитывается) ================= */
+var RELAYS=['РУ12','КТН','РВ2','РУ7','РУ28','КМН','РВ3','РУ29','РУ5','РВ5','РУ30','Д1','Д2','БМ','РУ4','КУ17','Л35'];
+function clone(o){var r={};for(var k in o)r[k]=o[k];return r}
+var FR=[], st={};
+function push(ev){FR.push({st:clone(st),ev:ev})}
+st['В28р']=true; push({t:'start'});
+st['В27']=true; push({t:'В27'});
+var guard=0;
+while(guard++<60){
+  var s=solve(st), chg=[];
+  RELAYS.forEach(function(d){if(!!s.pw[d]!==!!st[d])chg.push(d)});
+  if(chg.length){
+    chg.forEach(function(d){st[d]=!!s.pw[d]; if(d==='РВ2'&&st[d])st['РВ2к']=true; if(d==='РВ3'&&!st[d])st['РВ3к']=false; if(d==='РВ5'&&!st[d])st['РВ5к']=false});
+    push({t:'relay',ch:chg});continue;
+  }
+  if(st['Д1']&&!st['РДМ']){st['РДМ']=true;push({t:'РДМ'});continue}
+  if(st['РВ3']&&!st['РВ3к']){st['РВ3к']=true;push({t:'timer',d:'РВ3'});continue}
+  if(!st['РВ2']&&st['РВ2к']){st['РВ2к']=false;push({t:'timer',d:'РВ2'});continue}
+  if(st['РВ5']&&!st['РВ5к']){st['РВ5к']=true;push({t:'timer',d:'РВ5'});continue}
+  break;
+}
+FR.forEach(function(fr){fr.s=solve(fr.st)});
+window.__pk={FR:FR,EL:EL,solve:solve};
+
+/* ================= Тексты шагов ================= */
+var C=window.PK_CARDS||[];
+
+/* ================= Отрисовка шага ================= */
+var cur=0, sel=null;
+function devText(d){return '<span class="pl">'+d+'</span>'}
+function draw(){
+  var fr=FR[cur], prev=FR[cur-1], nx=FR[cur+1], s=fr.s;
+  var prevS=prev?prev.s:null;
+  SEG.forEach(function(g){
+    var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
+    var on=!!s.cur[g.net];
+    if(on&&g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) on=s.live.length>0;
+      else on=s.live.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
+    if(on) c+=' pk-on';
+    else if(s.P[g.net]&&!(prevS&&prevS.P[g.net])&&cur>0) c+=' pk-prep';
+    g.el.setAttribute('class',c);
+  });
+  EL.forEach(function(e){
+    var cls='pk-el';
+    if(e.kind==='sw'){
+      var cl=closed(e,fr.st), was=prev?closed(e,prev.st):cl;
+      if(e.bl){ if(e.tum){var yy=+e.bl.getAttribute('y1');e.bl.setAttribute('x2',cl?160:156);e.bl.setAttribute('y2',cl?yy:yy-10)}
+                else{e.bl.setAttribute('x2',cl?13:11);e.bl.setAttribute('y2',cl?0:-11)} }
+      if(cl!==was) cls+=' pk-chg';
+      if(cl&&s.cur[e.n1]&&s.cur[e.n2]) cls+=' pk-con';
+      if(!cl&&cur>0&&prevS){var nw=function(n){return s.P[n]&&!prevS.P[n]};if((nw(e.n1)&&!s.P[e.n2])||(nw(e.n2)&&!s.P[e.n1])) cls+=' pk-wait';}
+    } else if(e.kind==='coil'){
+      if(fr.st[e.dev]) cls+=' pk-act';
+      if(s.pw[e.dev]&&!fr.st[e.dev]) cls+=' pk-next';
+      if(prev&&!!prev.st[e.dev]!==!!fr.st[e.dev]) cls+=' pk-chg';
+    } else return;
+    if(sel) cls+=(e.dev===sel?' pk-sel':' pk-dim');
+    e.g.setAttribute('class',cls);
+  });
+  var c=C[cur]||{};
+  document.getElementById('pk_tag').textContent='Шаг '+(cur+1)+' из '+FR.length+(c.tag?' · '+c.tag:'');
+  document.getElementById('pk_title').innerHTML=c.title||'';
+  document.getElementById('pk_desc').innerHTML=(c.why?'<div class="row"><div class="l">Почему</div><div>'+c.why+'</div></div>':'')+(c.next?'<div class="row"><div class="l">Что дальше</div><div>'+c.next+'</div></div>':'');
+  document.getElementById('pk_plabel').textContent='Шаг '+(cur+1)+' из '+FR.length;
+  document.getElementById('pk_pfill').style.width=((cur+1)/FR.length*100)+'%';
+  document.getElementById('pk_prev').disabled=cur===0;
+  document.getElementById('pk_next').disabled=cur===FR.length-1;
+}
+function go(i){cur=Math.max(0,Math.min(FR.length-1,i));draw()}
+document.getElementById('pk_prev').onclick=function(){go(cur-1)};
+document.getElementById('pk_next').onclick=function(){go(cur+1)};
+document.getElementById('pk_prog').onclick=function(ev){var r=this.getBoundingClientRect();go(Math.floor((ev.clientX-r.left)/r.width*FR.length))};
+
+/* выбор аппарата */
+var info=document.getElementById('pk_info');
+var INFO=window.PK_INFO||{};
+function pick(d){
+  sel=(sel===d)?null:d; draw();
+  if(!sel){info.hidden=true;return}
+  var items=EL.filter(function(e){return e.dev===sel&&e.kind!=='load'});
+  var hasCoil=items.some(function(e){return e.kind==='coil'});
+  var no=items.filter(function(e){return e.kind==='sw'&&e.s!=='NC'}).length, nc=items.filter(function(e){return e.kind==='sw'&&e.s==='NC'}).length;
+  var ex=items.map(function(e){return e.info}).filter(Boolean)[0]||'';
+  var parts=[];if(hasCoil)parts.push('катушка');if(no)parts.push('замыкающих контактов: '+no);if(nc)parts.push('размыкающих контактов: '+nc);
+  var st=FR[cur].st, on=st[sel];
+  var stTxt=hasCoil?(on?' Сейчас включено.':' Сейчас выключено.'):'';
+  info.innerHTML='<b>'+sel+'</b>'+(INFO[sel]?' — '+INFO[sel]:'')+(ex&&!INFO[sel]?' — '+ex:'')+'<div class="ch">На схеме: '+(parts.join(', ')||'—')+'.'+stTxt+'</div>';
+  info.hidden=false;
+}
+EL.forEach(function(e){if(e.g&&!e.g.__pk){e.g.__pk=1;e.g.addEventListener('click',function(ev){ev.stopPropagation();pick(e.dev)})}});
+sv.addEventListener('click',function(){if(sel)pick(sel)});
+
+/* масштаб */
+var sheet=document.getElementById('pk_sheet'), z=null;
+function apply(){sv.setAttribute('width',Math.round(W*z));sv.setAttribute('height',Math.round(H*z))}
+function fit(){var w=sheet.clientWidth||700;z=Math.max(0.3,(w-2)/W);apply()}
+document.getElementById('pk_zi').onclick=function(){z=Math.min(3,z*1.25);apply()};
+document.getElementById('pk_zo').onclick=function(){z=Math.max(0.3,z/1.25);apply()};
+document.getElementById('pk_zf').onclick=fit;
+window.__pkShow=function(){ if(z===null){ if((sheet.clientWidth||0)<700){z=0.85;apply()} else fit(); } };
+go(0);
+})();
+
 </script>
 </body>
 </html>
