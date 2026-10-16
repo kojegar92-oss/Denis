@@ -145,16 +145,16 @@ h1{font-size:20px}
 /* --- вкладка «Плакат ТЭМ18Д»: лист всегда тёмный --- */
 .pk-zoom{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 8px;font-size:12px;color:var(--text-secondary)}
 .pk-zoom button{padding:6px 12px}
-.pk-sheet{overflow:auto;-webkit-overflow-scrolling:touch;border-radius:10px;background:#14171c;border:1px solid #2a2f37;max-height:80vh}
+.pk-sheet{overflow:auto;-webkit-overflow-scrolling:touch;border-radius:10px;background:#14171c;border:1px solid #2a2f37;max-height:calc(100vh - 90px);width:calc(100vw - 40px);max-width:1600px;position:relative;left:50%;transform:translateX(-50%)}
 .pk-sheet svg{display:block}
 .pk-bg{fill:#14171c}
 .pk-w{stroke:#4f5662;stroke-width:1.7;stroke-linecap:round}
 .pk-w.pk-on{stroke:#2BB386;stroke-width:2.6}
 .pk-w.pk-prep{stroke:#EF9F27;stroke-width:2.3}
-.pk-t{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:10.5px;fill:#b9c0ca;font-style:italic}
-.pk-tp{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:9.5px;fill:#98a0ab}
-.pk-tn{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:12px;font-weight:600;fill:#eef1f5}
-.pk-cap{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:10.5px;fill:#8f97a3;font-style:italic}
+.pk-t{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:11.5px;fill:#c3c9d2;font-style:italic}
+.pk-tp{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:10px;fill:#a3abb6}
+.pk-tn{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:13px;font-weight:600;fill:#eef1f5}
+.pk-cap{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:11px;fill:#8f97a3;font-style:italic}
 #pk_sv text{paint-order:stroke;stroke:#14171c;stroke-width:3px;stroke-linejoin:round}
 .pk-sym{fill:none;stroke:#a7afba;stroke-width:1.6;stroke-linecap:round}
 .pk-dash{stroke-dasharray:3 3}
@@ -176,6 +176,18 @@ h1{font-size:20px}
 .pk-el.pk-dim{opacity:.35}
 @media (prefers-reduced-motion:no-preference){.pk-w{transition:stroke .25s}.pk-bl{transition:all .25s}}
 .pk-el.pk-chg:not(.pk-act) .pk-coil{stroke:#4C9BEA;stroke-width:2.2}
+
+.pk-fbtn{border-color:#185FA5!important;color:var(--text-accent)!important;font-weight:500}
+.pk-fbar{display:none}
+#vp.pk-isfull .pk-fbar{display:flex;position:fixed;left:0;right:0;top:0;z-index:51;gap:8px;align-items:center;background:#1b1f26;border-bottom:1px solid #2a2f37;padding:8px max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px));padding-top:max(8px,env(safe-area-inset-top,0px))}
+#vp.pk-isfull .pk-fbar button{color:#eef1f5;border-color:#4a515c;padding:8px 14px;flex:none}
+#vp.pk-isfull .pk-fbar .btnp{border:none}
+#vp.pk-isfull .pk-fbar button:disabled{opacity:.4}
+.pk-ft{flex:1;min-width:0;color:#dfe3e8;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-ft .pl{background:#2a2f37;color:#eef1f5;border-color:#4a515c}
+#vp.pk-isfull .pk-sheet{position:fixed;left:0;top:56px;right:0;bottom:0;width:auto;max-width:none;max-height:none;transform:none;border-radius:0;border:0;z-index:50}
+html.pk-noscroll,html.pk-noscroll body{overflow:hidden}
+#vp.pk-isfull .info{position:fixed;left:12px;right:12px;bottom:12px;z-index:52}
 </style>
 </head>
 <body>
@@ -569,7 +581,8 @@ root.innerHTML=
 '<span><i style="border-top:2.5px dotted #9C95F0"></i>катушка получила питание, сработает на следующем шаге</span>'+
 '<span><i style="border-top:2.5px solid #EF9F27"></i>цепь подготовлена: напряжение дошло до разомкнутого контакта</span>'+
 '<span><i style="border-top:1.5px solid #5d6570"></i>тока нет</span></div>'+
-'<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
+'<div class="pk-zoom"><button id="pk_zo" type="button" aria-label="Уменьшить">−</button><button id="pk_zi" type="button" aria-label="Увеличить">+</button><button id="pk_zf" type="button">По ширине</button><button id="pk_full" type="button" class="pk-fbtn">⛶ Во весь экран</button><span>Номера проводов и разъёмов — как на плакате «Электрическая схема тепловоза ТЭМ18Д».</span></div>'+
+'<div class="pk-fbar" id="pk_fbar"><button id="pk_fx" type="button" aria-label="Закрыть">✕</button><button id="pk_fp" type="button" class="btnp" aria-label="Назад">←</button><div class="pk-ft" id="pk_ft"></div><button id="pk_fn" type="button" class="btnp" aria-label="Далее">→</button><button id="pk_fo" type="button" aria-label="Уменьшить">−</button><button id="pk_fi" type="button" aria-label="Увеличить">+</button></div>'+
 '<div class="pk-sheet" id="pk_sheet"><svg id="pk_sv" xmlns="http://www.w3.org/2000/svg"></svg></div>'+
 '<div id="pk_info" class="info" hidden></div>';
 
@@ -617,7 +630,7 @@ function contact(x,y,o){
   if(o.rot) tx(x-12,y+4,o.l,'pk-tn','end',g); else tx(x,y-up,o.l,'pk-tn','middle',g);
   if(o.pins&&!o.rot){tx(x-15,y+15,o.pins[0],'pk-tp','middle',g);tx(x+19,y+15,o.pins[1],'pk-tp','middle',g)}
   var p1=o.rot?[x,y-13]:[x-13,y], p2=o.rot?[x,y+13]:[x+13,y];
-  var e={kind:'sw',dev:o.dev||o.l,label:o.l,s:o.s,p1:p1,p2:p2,g:g,bl:bl,fr:fr,info:o.info||'',key:o.key,fixed:o.fixed,mark:o.mark};
+  var e={kind:'sw',dev:o.dev||o.l,label:o.l,s:o.s,p1:p1,p2:p2,g:g,bl:bl,fr:fr,info:o.info||'',key:o.key,fixed:o.fixed,mark:o.mark,noprep:o.noprep};
   EL.push(e); return e;
 }
 function conn(x,y,c,p,vert){ /* разъём — сквозной провод */
@@ -761,7 +774,7 @@ wire([[511,Y(15)],[511,Y(16)]]);
 row(Y(16),[{p:511},'1729',{x:596,c:'Р15',p:'28'},'1513',{k:746,s:'NO',mark:'dome',l:'РВ5',key:'РВ5к',pins:['1А','2А'],info:'РВ5 — реле времени. Контакт замыкается с выдержкой времени после включения катушки.'},'1514',{x:854,c:'Р15',p:'27'},'1727',{coil:CX,l:'РУ30'},'249',{p:BUS}]);
 row(Y(16),[{p:238},'2783',{k:327,s:'NC',l:'?',dev:'?',info:'Подпись этого контакта на плакате не читается (сгиб листа). При пуске он замкнут.'},'561',{k:440,s:'NO',l:'РУ12'},{p:470}]);
 vw(470,Y(16),Y(20)); vl(470,Y(16.2),Y(17),'575','r');
-row(Y(17),[{p:64},{x:97,c:'Р6',p:'11'},'250',{k:171,s:'NC',l:'КТН'},'2781',{k:251,s:'NC',l:'РУ16'},'261',{p:330}]);
+row(Y(17),[{p:64},{x:97,c:'Р6',p:'11'},'250',{k:171,s:'NC',l:'КТН',noprep:true},'2781',{k:251,s:'NC',l:'РУ16'},'261',{p:330}]);
 wire([[330,Y(17)],[330,Y(18)]]);
 plus(20,Y(18));
 row(Y(18),[{p:20},'454',{k:220,s:'NO',l:'РУ5'},'425',{n:330},{k:356,s:'NC',l:'КВ'},'235',{x:556,c:'Р9',p:'6'},'239',{n:665},{k:690,s:'NC',mark:'mech',l:'ВПУ',info:'ВПУ — блокировка валоповоротного устройства. Замкнута, когда валоповоротный механизм выведен.'},{n:715},'243',{x:835,c:'Р9',p:'9'},'251',{n:1000},{coil:CX,l:'Д1'},'254',{p:BUS}]);
@@ -898,13 +911,22 @@ function devText(d){return '<span class="pl">'+d+'</span>'}
 function draw(){
   var fr=FR[cur], prev=FR[cur-1], nx=FR[cur+1], s=fr.s;
   var prevS=prev?prev.s:null;
+  /* оранжевое: новая подготовленная цепь, которая упирается в разомкнутый контакт аппарата (не тумблера и не кнопки) */
+  var prep={}, waitEl={};
+  if(prevS&&cur>0){
+    var nw=function(n){return s.P[n]&&!prevS.P[n]&&!s.cur[n]};
+    var q=[];
+    EL.forEach(function(e){ if(e.kind!=='sw'||e.tum||e.mark==='btn'||e.dev==='РМС'||e.noprep||closed(e,fr.st))return;
+      [[e.n1,e.n2],[e.n2,e.n1]].forEach(function(pr){ if(s.P[pr[0]]&&!prevS.P[pr[0]]&&!s.P[pr[1]]){waitEl[EL.indexOf(e)]=1; if(nw(pr[0])&&!prep[pr[0]]){prep[pr[0]]=1;q.push(pr[0])}} }); });
+    while(q.length){var n=q.shift(); s.sw.forEach(function(e){var o=e.n1===n?e.n2:e.n2===n?e.n1:null; if(o&&!prep[o]&&nw(o)){prep[o]=1;q.push(o)}})}
+  }
   SEG.forEach(function(g){
     var c='pk-w'+(g.col==='k'?' pk-wk':g.col==='b'?' pk-wb':'');
     var on=!!s.cur[g.net];
     if(on&&g.net===MIN){ if(g.a[0]===BUS&&g.b[0]===BUS) on=s.live.length>0;
       else on=s.live.some(function(e){return [e.p1,e.p2].some(function(q){return q[1]===g.a[1]&&g.a[1]===g.b[1]&&Math.min(g.a[0],g.b[0])>=q[0]-1})}); }
     if(on) c+=' pk-on';
-    else if(s.P[g.net]&&!(prevS&&prevS.P[g.net])&&cur>0) c+=' pk-prep';
+    else if(prep[g.net]) c+=' pk-prep';
     g.el.setAttribute('class',c);
   });
   EL.forEach(function(e){
@@ -915,7 +937,7 @@ function draw(){
                 else{e.bl.setAttribute('x2',cl?13:11);e.bl.setAttribute('y2',cl?0:-11)} }
       if(cl!==was) cls+=' pk-chg';
       if(cl&&s.cur[e.n1]&&s.cur[e.n2]) cls+=' pk-con';
-      if(!cl&&cur>0&&prevS){var nw=function(n){return s.P[n]&&!prevS.P[n]};if((nw(e.n1)&&!s.P[e.n2])||(nw(e.n2)&&!s.P[e.n1])) cls+=' pk-wait';}
+      if(waitEl[EL.indexOf(e)]) cls+=' pk-wait';
     } else if(e.kind==='coil'){
       if(fr.st[e.dev]) cls+=' pk-act';
       if(s.pw[e.dev]&&!fr.st[e.dev]) cls+=' pk-next';
@@ -932,6 +954,8 @@ function draw(){
   document.getElementById('pk_pfill').style.width=((cur+1)/FR.length*100)+'%';
   document.getElementById('pk_prev').disabled=cur===0;
   document.getElementById('pk_next').disabled=cur===FR.length-1;
+  document.getElementById('pk_ft').innerHTML='<b>'+(cur+1)+'/'+FR.length+'</b> '+(c.title||'');
+  document.getElementById('pk_fp').disabled=cur===0; document.getElementById('pk_fn').disabled=cur===FR.length-1;
 }
 function go(i){cur=Math.max(0,Math.min(FR.length-1,i));draw()}
 document.getElementById('pk_prev').onclick=function(){go(cur-1)};
@@ -960,11 +984,22 @@ sv.addEventListener('click',function(){if(sel)pick(sel)});
 /* масштаб */
 var sheet=document.getElementById('pk_sheet'), z=null;
 function apply(){sv.setAttribute('width',Math.round(W*z));sv.setAttribute('height',Math.round(H*z))}
-function fit(){var w=sheet.clientWidth||700;z=Math.max(0.3,(w-2)/W);apply()}
-document.getElementById('pk_zi').onclick=function(){z=Math.min(3,z*1.25);apply()};
-document.getElementById('pk_zo').onclick=function(){z=Math.max(0.3,z/1.25);apply()};
+function fit(){var w=sheet.clientWidth||700;z=Math.max(0.3,(w-2)/W);if(w<700)z=Math.max(z,0.85);apply()}
+function zin(){var c=sheet.scrollLeft+sheet.clientWidth/2, r=c/(W*z); z=Math.min(3,z*1.25);apply();sheet.scrollLeft=r*W*z-sheet.clientWidth/2}
+function zout(){var c=sheet.scrollLeft+sheet.clientWidth/2, r=c/(W*z); z=Math.max(0.3,z/1.25);apply();sheet.scrollLeft=r*W*z-sheet.clientWidth/2}
+var full=false;
+function setFull(f){full=f;root.classList.toggle('pk-isfull',f);document.documentElement.classList.toggle('pk-noscroll',f);fit()}
+document.getElementById('pk_full').onclick=function(){setFull(true)};
+document.getElementById('pk_fx').onclick=function(){setFull(false)};
+document.getElementById('pk_fp').onclick=function(){go(cur-1)};
+document.getElementById('pk_fn').onclick=function(){go(cur+1)};
+document.getElementById('pk_fi').onclick=zin; document.getElementById('pk_fo').onclick=zout;
+document.addEventListener('keydown',function(e){if(full&&e.key==='Escape')setFull(false)});
+var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(!root.hidden)fit()},150)});
+document.getElementById('pk_zi').onclick=zin;
+document.getElementById('pk_zo').onclick=zout;
 document.getElementById('pk_zf').onclick=fit;
-window.__pkShow=function(){ if(z===null){ if((sheet.clientWidth||0)<700){z=0.85;apply()} else fit(); } };
+window.__pkShow=function(){ if(z===null) fit(); };
 go(0);
 })();
 
